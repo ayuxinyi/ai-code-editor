@@ -3,7 +3,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Inter } from "next/font/google";
 
-import { ThemeProvider } from "@/context/theme/theme.provider";
+import { Providers } from "@/context/auth/auth-ui.providers";
+import { ConvexClientProvider } from "@/context/convex/convex-client.provider";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -29,14 +30,9 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body className={`${inter.variable} ${plexMono.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <ConvexClientProvider>
+          <Providers>{children}</Providers>
+        </ConvexClientProvider>
       </body>
     </html>
   );
