@@ -17,6 +17,9 @@ export const EnvSchema = z.object({
   // Convex 配置
   NEXT_PUBLIC_CONVEX_URL: string(),
   NEXT_PUBLIC_CONVEX_SITE_URL: string(),
+  // AI 相关环境变量
+  OPENROUTER_API_KEY: string(),
+  DEEPSEEK_API_KEY: string(),
 });
 export type EnvSchema = output<typeof EnvSchema>;
 
