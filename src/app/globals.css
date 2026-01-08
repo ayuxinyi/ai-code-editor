@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-/* @import "@daveyplate/better-auth-ui/css"; */
+@import "@daveyplate/better-auth-ui/css";
+
+/* @import "tailwindcss-safe-area"; */
 
 @custom-variant dark (&:is(.dark *));
 
