@@ -24,6 +24,8 @@ export const EnvSchema = z.object({
   ANTHROPIC_API_KEY: string(),
   // Firecrawl API 密钥
   FIRECRAWL_API_KEY: string(),
+  // Sentry 认证令牌
+  SENTRY_AUTH_TOKEN: string(),
 });
 export type EnvSchema = output<typeof EnvSchema>;
 
