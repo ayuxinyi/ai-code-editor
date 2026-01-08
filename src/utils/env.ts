@@ -20,6 +20,10 @@ export const EnvSchema = z.object({
   // AI 相关环境变量
   OPENROUTER_API_KEY: string(),
   DEEPSEEK_API_KEY: string(),
+  // Anthropic API 密钥
+  ANTHROPIC_API_KEY: string(),
+  // Firecrawl API 密钥
+  FIRECRAWL_API_KEY: string(),
 });
 export type EnvSchema = output<typeof EnvSchema>;
 
