@@ -11,14 +11,12 @@ export const EnvSchema = z.object({
   DATABASE_URL: string(),
   BETTER_AUTH_SECRET: string(),
   BETTER_AUTH_URL: string(),
-  // Convex 相关环境变量
-  CONVEX_DEPLOYMENT: string(),
-  NEXT_PUBLIC_CONVEX_URL: string(),
-  NEXT_PUBLIC_CONVEX_SITE_URL: string(),
-  NEXT_PUBLIC_SITE_URL: string(),
   // GitHub 认证配置
   GITHUB_CLIENT_ID: string(),
   GITHUB_CLIENT_SECRET: string(),
+  // Convex 配置
+  NEXT_PUBLIC_CONVEX_URL: string(),
+  NEXT_PUBLIC_CONVEX_SITE_URL: string(),
 });
 export type EnvSchema = output<typeof EnvSchema>;
 

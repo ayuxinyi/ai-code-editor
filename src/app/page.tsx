@@ -1,22 +1,12 @@
-import { UserAvatar, UserButton } from "@daveyplate/better-auth-ui";
-import { connection } from "next/server";
-import { Suspense } from "react";
+"use client";
 
-import { fetchAuthQuery } from "@/lib/auth-server";
-
-import { api } from "../../convex/_generated/api";
+import { List } from "./_list";
 
 const Home = () => {
   return (
-    <Suspense>
-      <HomeSuspense />
-    </Suspense>
+    <>
+      <List />
+    </>
   );
 };
 export default Home;
-
-const HomeSuspense = async () => {
-  await connection();
-  const user = await fetchAuthQuery(api.auth.getCurrentUser);
-  return <UserButton />;
-};

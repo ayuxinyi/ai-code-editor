@@ -1,17 +1,22 @@
 "use client";
 
-import { AuthUIProvider } from "@daveyplate/better-auth-ui";
+import { AuthUIProvider, UserButton } from "@daveyplate/better-auth-ui";
+import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { AuthLoadingView } from "@/features/auth/components/auth-loading-view";
+import { UnAuthenticatedView } from "@/features/auth/components/un-authenticated-view";
 import { authClient } from "@/lib/auth-client";
 
 import { ThemeProvider } from "../theme/theme.provider";
 
 export function Providers({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathName = usePathname();
+  const isPublic = pathName.startsWith("/auth") || pathName === "/";
 
   return (
     <ThemeProvider
@@ -29,13 +34,33 @@ export function Providers({ children }: { children: ReactNode }) {
           router.refresh();
         }}
         Link={Link}
-        // TODO: 使用关联社交账户，会提示/api/auth/account-info 404，这个问题需要等待better-auth发布最新的包
         social={{
           providers: ["github", "google"],
         }}
       >
         <Toaster richColors />
-        {children}
+        {isPublic ? (
+          children
+        ) : (
+          <>
+            <Authenticated>
+              <UserButton
+                localization={{
+                  SIGN_OUT: "退出登录",
+                  SETTINGS: "用户设置",
+                }}
+                size="icon"
+              />
+              {children}
+            </Authenticated>
+            <Unauthenticated>
+              <UnAuthenticatedView />
+            </Unauthenticated>
+          </>
+        )}
+        <AuthLoading>
+          <AuthLoadingView />
+        </AuthLoading>
       </AuthUIProvider>
     </ThemeProvider>
   );
