@@ -16,7 +16,7 @@ import { ThemeProvider } from "../theme/theme.provider";
 export function Providers({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathName = usePathname();
-  const isPublic = pathName.startsWith("/auth") || pathName === "/";
+  const isProtected = pathName.startsWith("/dashboard");
 
   return (
     <ThemeProvider
@@ -39,7 +39,7 @@ export function Providers({ children }: { children: ReactNode }) {
         }}
       >
         <Toaster richColors />
-        {isPublic ? (
+        {!isProtected ? (
           children
         ) : (
           <>
