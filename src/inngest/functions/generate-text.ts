@@ -44,6 +44,15 @@ export const demoGenerate = inngest.createFunction(
         model: openrouter("xiaomi/mimo-v2-flash:free"),
         prompt: finalPrompt,
         temperature: 0.2,
+        // 开启实验性的遥测功能，用于监控模型的调用
+        experimental_telemetry: {
+          // 开启实验性的遥测功能，用于监控模型的调用
+          isEnabled: true,
+          // 记录模型的输入
+          recordInputs: true,
+          // 记录模型的输出
+          recordOutputs: true,
+        },
       });
     });
   }
