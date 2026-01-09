@@ -34,6 +34,7 @@ export default async function AuthPage({
           NAME_PLACEHOLDER: "admin",
           ALREADY_HAVE_AN_ACCOUNT: "已有账号？",
         }}
+        redirectTo="/dashboard"
         otpSeparators={2}
         socialLayout="horizontal"
       />

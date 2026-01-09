@@ -1,6 +1,7 @@
-"user client";
+"use client";
 
 import { useMutation, useQuery } from "convex/react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 
@@ -17,7 +18,17 @@ export const List = () => {
           <li key={project._id}>{project.name}</li>
         ))}
       </ul>
-      <Button onClick={() => create({ name: "你好" })}>创建项目</Button>
+      <Button
+        onClick={async () => {
+          try {
+            await create({ name: "你好" });
+          } catch {
+            toast.error("创建失败");
+          }
+        }}
+      >
+        创建项目2
+      </Button>
     </div>
   );
 };
