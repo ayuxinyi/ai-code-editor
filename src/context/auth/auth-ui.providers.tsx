@@ -38,7 +38,7 @@ export function Providers({ children }: { children: ReactNode }) {
           providers: ["github", "google"],
         }}
       >
-        <Toaster richColors />
+        <Toaster richColors closeButton />
         {!isProtected ? (
           children
         ) : (
@@ -56,11 +56,11 @@ export function Providers({ children }: { children: ReactNode }) {
             <Unauthenticated>
               <UnAuthenticatedView />
             </Unauthenticated>
+            <AuthLoading>
+              <AuthLoadingView />
+            </AuthLoading>
           </>
         )}
-        <AuthLoading>
-          <AuthLoadingView />
-        </AuthLoading>
       </AuthUIProvider>
     </ThemeProvider>
   );
