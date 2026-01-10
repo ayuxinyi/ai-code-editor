@@ -1,7 +1,6 @@
 "use client";
 import { GitHubIcon } from "@daveyplate/better-auth-ui";
 import { SparklesIcon } from "lucide-react";
-import { Poppins } from "next/font/google";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -14,19 +13,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
+import { FONT } from "@/constants";
 import { cn } from "@/lib/utils";
 
-import { useCreateProject } from "../hooks/use-projects";
+import { useCreateProject } from "../../hooks/use-projects";
 import { ProjectCommandDialog } from "./project-command-dialog";
 import { ProjectsList } from "./projects-list";
-
-// 定义字体
-const font = Poppins({
-  // 定义字体子集
-  subsets: ["latin"],
-  // 定义字体权重
-  weight: ["400", "500", "600", "700"],
-});
 
 export const ProjectsView = () => {
   const createProject = useCreateProject();
@@ -96,7 +88,7 @@ export const ProjectsView = () => {
               <h1
                 className={cn(
                   "text-4xl md:text-5xl font-semibold",
-                  font.className
+                  FONT.className
                 )}
               >
                 Polaris

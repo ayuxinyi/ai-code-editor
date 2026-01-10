@@ -4,12 +4,13 @@ import { useMutation, useQuery } from "convex/react";
 
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
+import { LIMIT_NUMBER } from "@/constants";
 
 export const useProjects = () => {
   return useQuery(api.projects.get);
 };
 
-export const useProjectsPartial = (limit: number = 10) => {
+export const useProjectsPartial = (limit: number = LIMIT_NUMBER) => {
   return useQuery(api.projects.getPartial, { limit });
 };
 
@@ -30,6 +31,49 @@ export const useCreateProject = () => {
           newProject,
           ...existingProjects,
         ]);
+      }
+    }
+  );
+};
+
+export const useProjectById = (projectId: Id<"projects">) => {
+  return useQuery(api.projects.getProjectById, { projectId });
+};
+
+export const useProjectRename = (projectId: Id<"projects">) => {
+  return useMutation(api.projects.rename).withOptimisticUpdate(
+    (localStore, args) => {
+      // 从本地存储中获取当前项目
+      const existingProject = localStore.getQuery(api.projects.getProjectById, {
+        projectId,
+      });
+      const now = Date.now();
+      // 如果项目存在，更新项目名称和更新时间
+      if (existingProject !== undefined && existingProject !== null) {
+        // 更新本地存储中的项目
+        localStore.setQuery(
+          api.projects.getProjectById,
+          { projectId },
+          {
+            ...existingProject,
+            name: args.name,
+            updatedAt: now,
+          }
+        );
+      }
+
+      // 更新本地存储中的项目列表
+      const existingProjects = localStore.getQuery(api.projects.get);
+      if (existingProjects !== undefined) {
+        localStore.setQuery(
+          api.projects.get,
+          {},
+          existingProjects.map(project =>
+            project._id === projectId
+              ? { ...project, name: args.name, updatedAt: now }
+              : project
+          )
+        );
       }
     }
   );

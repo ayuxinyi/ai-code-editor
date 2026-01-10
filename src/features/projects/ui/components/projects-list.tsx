@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Spinner } from "@/components/ui/spinner";
 
-import type { Doc } from "../../../../convex/_generated/dataModel";
-import { useProjectsPartial } from "../hooks/use-projects";
-import { formatTimestamp } from "../utils/project-helper";
+import type { Doc } from "../../../../../convex/_generated/dataModel";
+import { useProjectsPartial } from "../../hooks/use-projects";
+import { formatTimestamp } from "../../utils/project-helper";
 import { ProjectIcon } from "./project-icon";
 import { ProjectItem } from "./project-item";
 
@@ -43,7 +43,7 @@ const ContinueCard = ({ data }: { data: Doc<"projects"> }) => {
 };
 
 export const ProjectsList: FC<ProjectsListProps> = ({ onViewAll }) => {
-  const projects = useProjectsPartial(6);
+  const projects = useProjectsPartial();
 
   if (projects === undefined) return <Spinner className="size-4 text-ring" />;
 

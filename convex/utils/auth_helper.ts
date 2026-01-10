@@ -1,6 +1,6 @@
 import { ConvexError } from "convex/values";
 
-import type { MutationCtx, QueryCtx } from "./_generated/server";
+import type { MutationCtx, QueryCtx } from "../_generated/server";
 
 // 验证用户身份
 export const verifyAuth = async (ctx: MutationCtx | QueryCtx) => {
