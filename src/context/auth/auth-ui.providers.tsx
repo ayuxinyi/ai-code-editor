@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthUIProvider, UserButton } from "@daveyplate/better-auth-ui";
+import { AuthUIProvider } from "@daveyplate/better-auth-ui";
 import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -43,16 +43,7 @@ export function Providers({ children }: { children: ReactNode }) {
           children
         ) : (
           <>
-            <Authenticated>
-              <UserButton
-                localization={{
-                  SIGN_OUT: "退出登录",
-                  SETTINGS: "用户设置",
-                }}
-                size="icon"
-              />
-              {children}
-            </Authenticated>
+            <Authenticated>{children}</Authenticated>
             <Unauthenticated>
               <UnAuthenticatedView />
             </Unauthenticated>

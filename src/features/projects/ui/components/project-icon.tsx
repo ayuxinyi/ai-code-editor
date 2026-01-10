@@ -6,7 +6,7 @@ import type { FC } from "react";
 
 import { cn } from "@/lib/utils";
 
-import type { Doc } from "../../../../convex/_generated/dataModel";
+import type { Doc } from "../../../../../convex/_generated/dataModel";
 
 const iconVariants = cva("", {
   variants: {

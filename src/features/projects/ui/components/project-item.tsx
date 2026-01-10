@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { FC } from "react";
 
-import type { Doc } from "../../../../convex/_generated/dataModel";
-import { formatTimestamp } from "../utils/project-helper";
+import type { Doc } from "../../../../../convex/_generated/dataModel";
+import { formatTimestamp } from "../../utils/project-helper";
 import { ProjectIcon } from "./project-icon";
 
 interface ProjectItemProps {

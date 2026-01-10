@@ -2,6 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Inter } from "next/font/google";
+import { Suspense } from "react";
 
 import { Providers } from "@/context/auth/auth-ui.providers";
 import { ConvexClientProvider } from "@/context/convex/convex-client.provider";
@@ -35,7 +36,9 @@ export default function RootLayout({
     <html lang="zh-CN" suppressHydrationWarning>
       <body className={`${inter.variable} ${plexMono.variable} antialiased`}>
         <ConvexClientProvider>
-          <Providers>{children}</Providers>
+          <Suspense>
+            <Providers>{children}</Providers>
+          </Suspense>
         </ConvexClientProvider>
       </body>
     </html>
