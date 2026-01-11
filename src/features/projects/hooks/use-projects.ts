@@ -40,9 +40,9 @@ export const useProjectById = (projectId: Id<"projects">) => {
   return useQuery(api.projects.getProjectById, { projectId });
 };
 
-export const useProjectRename = (projectId: Id<"projects">) => {
+export const useProjectRename = () => {
   return useMutation(api.projects.rename).withOptimisticUpdate(
-    (localStore, args) => {
+    (localStore, { projectId, name }) => {
       // 从本地存储中获取当前项目
       const existingProject = localStore.getQuery(api.projects.getProjectById, {
         projectId,
@@ -56,7 +56,7 @@ export const useProjectRename = (projectId: Id<"projects">) => {
           { projectId },
           {
             ...existingProject,
-            name: args.name,
+            name,
             updatedAt: now,
           }
         );
@@ -70,7 +70,7 @@ export const useProjectRename = (projectId: Id<"projects">) => {
           {},
           existingProjects.map(project =>
             project._id === projectId
-              ? { ...project, name: args.name, updatedAt: now }
+              ? { ...project, name, updatedAt: now }
               : project
           )
         );

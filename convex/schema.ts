@@ -25,4 +25,18 @@ export default defineSchema({
   })
     // 定义一个索引，用于根据ownerId查询项目，可以根据ownerId快速查询用户所有的项目
     .index("by_ownerId", ["ownerId"]),
+  files: defineTable({
+    projectId: v.id("projects"),
+    parentId: v.optional(v.id("files")),
+    name: v.string(),
+    type: v.union(v.literal("folder"), v.literal("file")),
+    // 仅适用于文本文件
+    content: v.optional(v.string()),
+    // 用于保存图片，文件等二进制数据，我们会将这些二进制数据保存在convex的存储中
+    storageId: v.optional(v.id("_storage")),
+    updatedAt: v.number(),
+  })
+    .index("by_projectId", ["projectId"])
+    .index("by_parentId", ["parentId"])
+    .index("by_project_parent", ["projectId", "parentId"]),
 });
