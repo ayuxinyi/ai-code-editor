@@ -16,7 +16,8 @@ import { ThemeProvider } from "../theme/theme.provider";
 export function Providers({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathName = usePathname();
-  const isProtected = pathName.startsWith("/dashboard");
+  const isProtected =
+    pathName.startsWith("/dashboard") || pathName.startsWith("/projects");
 
   return (
     <ThemeProvider

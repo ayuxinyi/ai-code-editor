@@ -1,7 +1,8 @@
-import { ConvexError, v } from "convex/values";
+import { v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
 import { verifyAuth } from "./utils/auth_helper";
+import { requireProject } from "./utils/project.helper";
 
 export const create = mutation({
   args: {
@@ -58,17 +59,7 @@ export const getProjectById = query({
   },
   async handler(ctx, { projectId }) {
     const identity = await verifyAuth(ctx);
-    const project = await ctx.db.get("projects", projectId);
-    if (!project) {
-      throw new ConvexError(
-        "很抱歉，您要访问的项目不存在，请检查项目ID是否正确"
-      );
-    }
-    if (project.ownerId !== identity.subject) {
-      throw new ConvexError(
-        "很抱歉，您没有权限访问该项目，请检查项目ID是否正确"
-      );
-    }
+    const project = await requireProject(ctx, projectId, identity.subject);
     return project;
   },
 });
@@ -80,17 +71,7 @@ export const rename = mutation({
   },
   async handler(ctx, { projectId, name }) {
     const identity = await verifyAuth(ctx);
-    const project = await ctx.db.get("projects", projectId);
-    if (!project) {
-      throw new ConvexError(
-        "很抱歉，您要访问的项目不存在，请检查项目ID是否正确"
-      );
-    }
-    if (project.ownerId !== identity.subject) {
-      throw new ConvexError(
-        "很抱歉，您没有权限访问该项目，请检查项目ID是否正确"
-      );
-    }
+    await requireProject(ctx, projectId, identity.subject);
     await ctx.db.patch("projects", projectId, {
       name,
       updatedAt: Date.now(),

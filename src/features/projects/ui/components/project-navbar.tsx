@@ -34,7 +34,7 @@ interface Props {
 
 export const ProjectNavbar: FC<Props> = ({ projectId }) => {
   const project = useProjectById(projectId);
-  const rename = useProjectRename(projectId);
+  const rename = useProjectRename();
 
   const [isRenaming, setIsRenaming] = useState(false);
   const [name, setName] = useState("");

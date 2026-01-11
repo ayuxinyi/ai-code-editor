@@ -1,11 +1,20 @@
 "use client";
 
 import { GitHubIcon } from "@daveyplate/better-auth-ui";
+import { Allotment } from "allotment";
 import { type FC, useState } from "react";
 
+import {
+  DEFAULT_FILE_DIRECTORY_SIDEBAR_WIDTH,
+  DEFAULT_MAIN_SIZE,
+  DEFAULT_SIDEBAR_WIDTH,
+  MAX_SIDEBAR_WIDTH,
+  MIN_SIDEBAR_WIDTH,
+} from "@/constants";
 import { cn } from "@/lib/utils";
 
 import type { Id } from "../../../../../convex/_generated/dataModel";
+import { FileExplorer } from "../components/file-explorer";
 import { ProjectTab } from "../components/project-tab";
 
 interface Props {
@@ -47,7 +56,17 @@ export const ProjectIdSection: FC<Props> = ({ projectId }) => {
             isEditorActive ? "visible" : "invisible"
           )}
         >
-          <div>编 辑</div>
+          <Allotment defaultSizes={[DEFAULT_SIDEBAR_WIDTH, DEFAULT_MAIN_SIZE]}>
+            <Allotment.Pane
+              snap
+              minSize={MIN_SIDEBAR_WIDTH}
+              maxSize={MAX_SIDEBAR_WIDTH}
+              preferredSize={DEFAULT_FILE_DIRECTORY_SIDEBAR_WIDTH}
+            >
+              <FileExplorer projectId={projectId} />
+            </Allotment.Pane>
+            <Allotment.Pane>代码编辑器</Allotment.Pane>
+          </Allotment>
         </div>
         <div
           className={cn(
