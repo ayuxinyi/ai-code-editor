@@ -11,6 +11,7 @@ import {
   MAX_SIDEBAR_WIDTH,
   MIN_SIDEBAR_WIDTH,
 } from "@/constants";
+import { EditorSection } from "@/features/editor/ui/sections/editor-section";
 import { cn } from "@/lib/utils";
 
 import type { Id } from "../../../../../convex/_generated/dataModel";
@@ -63,9 +64,13 @@ export const ProjectIdSection: FC<Props> = ({ projectId }) => {
               maxSize={MAX_SIDEBAR_WIDTH}
               preferredSize={DEFAULT_FILE_DIRECTORY_SIDEBAR_WIDTH}
             >
+              {/* 文件目录侧边栏 */}
               <FileExplorer projectId={projectId} />
             </Allotment.Pane>
-            <Allotment.Pane>代码编辑器</Allotment.Pane>
+            <Allotment.Pane>
+              {/* 代码编辑器 */}
+              <EditorSection projectId={projectId} />
+            </Allotment.Pane>
           </Allotment>
         </div>
         <div

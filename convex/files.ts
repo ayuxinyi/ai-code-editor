@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 
+import type { Doc, Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { verifyAuth } from "./utils/auth_helper";
 import { requireProject } from "./utils/project.helper";
@@ -278,5 +279,40 @@ export const updateFile = mutation({
     await ctx.db.patch("projects", file.projectId, {
       updatedAt: now,
     });
+  },
+});
+
+// 获取某个文件夹的内容
+export const getFilePath = query({
+  args: {
+    fileId: v.id("files"),
+  },
+  async handler(ctx, { fileId }) {
+    const identity = await verifyAuth(ctx);
+
+    const file = await ctx.db.get("files", fileId);
+    if (!file) {
+      throw new ConvexError(
+        "很抱歉，您要访问的文件不存在，请检查文件ID是否正确"
+      );
+    }
+    await requireProject(ctx, file.projectId, identity.subject);
+
+    // 构建文件路径
+    const path: { _id: string; name: string; type: "file" | "folder" }[] = [];
+    let currentId: Id<"files"> | undefined = fileId;
+    // 从当前文件开始，向上遍历父文件夹，构建路径
+    while (currentId) {
+      const file = (await ctx.db.get("files", currentId)) as
+        | Doc<"files">
+        | undefined;
+      // 文件不存在，跳出循环
+      if (!file) break;
+      // 加入当前文件到路径
+      path.unshift({ _id: file._id, name: file.name, type: file.type });
+      // 继续遍历父文件夹
+      currentId = file.parentId;
+    }
+    return path;
   },
 });

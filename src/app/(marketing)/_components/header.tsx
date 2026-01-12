@@ -55,18 +55,11 @@ export const HeroHeader = () => {
                 className="flex items-center space-x-2"
               >
                 <Image
-                  src="/logo-alt.svg"
-                  alt="logo"
-                  width={40}
-                  height={40}
-                  className="object-cover hidden dark:block"
-                />
-                <Image
                   src="/logo.svg"
                   alt="logo"
                   width={40}
                   height={40}
-                  className="object-cover block dark:hidden"
+                  className="object-cover"
                 />
                 <h1 className="text-4xl md:text-5xl font-semibold">Polaris</h1>
               </Link>

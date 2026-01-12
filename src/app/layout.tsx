@@ -8,7 +8,7 @@ import { Providers } from "@/context/auth/auth-ui.providers";
 import { ConvexClientProvider } from "@/context/convex/convex-client.provider";
 
 const inter = Inter({
-  variable: "--font-inter-sans",
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 

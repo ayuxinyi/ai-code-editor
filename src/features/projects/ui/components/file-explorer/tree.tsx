@@ -5,6 +5,7 @@ import { type FC, useState } from "react";
 import { toast } from "sonner";
 
 import { getItemPadding } from "@/constants";
+import { useEditor } from "@/features/editor/hooks/use-editor";
 import {
   useDeleteFile,
   useFileCreate,
@@ -32,6 +33,7 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [creating, setCreating] = useState<"file" | "folder" | null>(null);
 
+  // file相关操作
   const renameFile = useRenameFile();
   const deleteFile = useDeleteFile();
   const createFile = useFileCreate();
@@ -41,6 +43,9 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
     parentId: item._id,
     enabled: isOpen && item.type === "folder",
   });
+
+  // 编辑器相关操作
+  const { openFile, closeTab, activeTabId } = useEditor(projectId);
 
   const handleCreate = (name: string) => {
     try {
@@ -86,6 +91,7 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
   // 文件
   if (item.type === "file") {
     const fileName = item.name;
+    const isActive = activeTabId === item._id;
 
     if (isRenaming) {
       return (
@@ -103,11 +109,18 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
       <TreeItemWrap
         item={item}
         level={level}
-        isActive={false}
-        onClick={() => {}}
-        onDoubleClick={() => {}}
+        isActive={isActive}
+        // 单机打开文件，只是预览，不固定在tab上
+        onClick={() => openFile(item._id, { pinned: false })}
+        // 双击打开文件，固定在tab上
+        onDoubleClick={() => {
+          openFile(item._id, { pinned: true });
+        }}
         onRename={() => setIsRenaming(true)}
         onDelete={() => {
+          // 关闭文件tab
+          closeTab(item._id);
+          // 删除文件
           deleteFile({ id: item._id });
         }}
       >

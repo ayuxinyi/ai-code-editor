@@ -71,20 +71,8 @@ export const ProjectNavbar: FC<Props> = ({ projectId }) => {
                     className="flex items-center"
                     prefetch
                   >
-                    <Image
-                      src="/logo.svg"
-                      alt="logo"
-                      width={20}
-                      height={20}
-                      className="block dark:hidden"
-                    />
-                    <Image
-                      src="/logo-alt.svg"
-                      alt="logo"
-                      width={20}
-                      height={20}
-                      className="hidden dark:block object-cover"
-                    />
+                    <Image src="/logo.svg" alt="logo" width={20} height={20} />
+
                     <span className={cn("text-sm font-medium", FONT.className)}>
                       Polaris
                     </span>

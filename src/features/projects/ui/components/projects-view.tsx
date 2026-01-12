@@ -76,14 +76,7 @@ export const ProjectsView = () => {
                 alt="Vercel"
                 width={32}
                 height={32}
-                className="md:size-8 sm:size-11.5! block dark:hidden"
-              />
-              <Image
-                src="/logo-alt.svg"
-                alt="Vercel"
-                width={32}
-                height={32}
-                className="md:size-8 sm:size-11.5! hidden dark:block"
+                className="md:size-8 sm:size-11.5!"
               />
               <h1
                 className={cn(
