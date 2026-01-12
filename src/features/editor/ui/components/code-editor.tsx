@@ -7,11 +7,11 @@ import type { FC } from "react";
 import { useEffect, useMemo, useRef } from "react";
 import { clouds } from "thememirror";
 
-import { customSetup } from "../extensions/custom-setup";
-import { getLanguageExtensions } from "../extensions/language-extension";
-import { minimap } from "../extensions/minimap";
-import { suggestion } from "../extensions/suggestion";
-import { customTheme } from "../extensions/theme";
+import { customSetup } from "../../extensions/custom-setup";
+import { getLanguageExtensions } from "../../extensions/language-extension";
+import { minimap } from "../../extensions/minimap";
+import { suggestion } from "../../extensions/suggestion";
+import { customTheme } from "../../extensions/theme";
 
 interface EditorProps {
   filename: string;
