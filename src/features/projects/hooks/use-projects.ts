@@ -6,42 +6,35 @@ import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { LIMIT_NUMBER } from "@/constants";
 
-export const useProjects = () => {
-  return useQuery(api.projects.get);
-};
+export const useProjects = () => useQuery(api.projects.get);
 
-export const useProjectsPartial = (limit: number = LIMIT_NUMBER) => {
-  return useQuery(api.projects.getPartial, { limit });
-};
+export const useProjectsPartial = (limit: number = LIMIT_NUMBER) =>
+  useQuery(api.projects.getPartial, { limit });
 
-export const useCreateProject = () => {
-  return useMutation(api.projects.create).withOptimisticUpdate(
-    (localStore, args) => {
-      const existingProjects = localStore.getQuery(api.projects.get);
-      if (existingProjects !== undefined) {
-        const now = Date.now();
-        const newProject = {
-          _id: crypto.randomUUID() as Id<"projects">,
-          _creationTime: now,
-          name: args.name,
-          ownerId: "anonymous",
-          updatedAt: now,
-        };
-        localStore.setQuery(api.projects.get, {}, [
-          newProject,
-          ...existingProjects,
-        ]);
-      }
+export const useCreateProject = () =>
+  useMutation(api.projects.create).withOptimisticUpdate((localStore, args) => {
+    const existingProjects = localStore.getQuery(api.projects.get);
+    if (existingProjects !== undefined) {
+      const now = Date.now();
+      const newProject = {
+        _id: crypto.randomUUID() as Id<"projects">,
+        _creationTime: now,
+        name: args.name,
+        ownerId: "anonymous",
+        updatedAt: now,
+      };
+      localStore.setQuery(api.projects.get, {}, [
+        newProject,
+        ...existingProjects,
+      ]);
     }
-  );
-};
+  });
 
-export const useProjectById = (projectId: Id<"projects">) => {
-  return useQuery(api.projects.getProjectById, { projectId });
-};
+export const useProjectById = (projectId: Id<"projects">) =>
+  useQuery(api.projects.getProjectById, projectId ? { projectId } : "skip");
 
-export const useProjectRename = () => {
-  return useMutation(api.projects.rename).withOptimisticUpdate(
+export const useProjectRename = () =>
+  useMutation(api.projects.rename).withOptimisticUpdate(
     (localStore, { projectId, name }) => {
       // 从本地存储中获取当前项目
       const existingProject = localStore.getQuery(api.projects.getProjectById, {
@@ -77,4 +70,3 @@ export const useProjectRename = () => {
       }
     }
   );
-};
