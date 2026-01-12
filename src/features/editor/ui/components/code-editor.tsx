@@ -10,6 +10,7 @@ import { clouds } from "thememirror";
 import { customSetup } from "../extensions/custom-setup";
 import { getLanguageExtensions } from "../extensions/language-extension";
 import { minimap } from "../extensions/minimap";
+import { suggestion } from "../extensions/suggestion";
 import { customTheme } from "../extensions/theme";
 
 interface EditorProps {
@@ -48,6 +49,8 @@ export const CodeEditor: FC<EditorProps> = ({
         customSetup,
         // 语法插件
         languageExtensions,
+        // AI 建议插件, 用于接受AI给出的建议，插件越靠前，优先级越高
+        suggestion(filename),
         // 绑定 Tab 键缩进
         keymap.of([indentWithTab]),
         // 最小地图插件
