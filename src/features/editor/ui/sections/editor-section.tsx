@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { type FC, useRef } from "react";
+import { type FC, useEffect, useRef } from "react";
 
 import {
   useFileById,
@@ -25,6 +25,14 @@ export const EditorSection: FC<Props> = ({ projectId }) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isActiveFileBinary = activeFile && activeFile.storageId;
   const isActiveFileText = activeFile && !activeFile.storageId;
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [activeTabId]);
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
