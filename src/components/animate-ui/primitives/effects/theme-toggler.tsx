@@ -140,9 +140,9 @@ function ThemeToggler({
 }
 
 export {
+  type Direction,
+  type Resolved,
+  type ThemeSelection,
   ThemeToggler,
   type ThemeTogglerProps,
-  type ThemeSelection,
-  type Resolved,
-  type Direction,
 };

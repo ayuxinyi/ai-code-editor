@@ -2,7 +2,6 @@ import { Vue } from "@react-symbols/icons/files";
 import { FileIcon, FolderIcon } from "@react-symbols/icons/utils";
 import { ChevronRightIcon } from "lucide-react";
 import { type FC, useState } from "react";
-import { toast } from "sonner";
 
 import { getItemPadding } from "@/constants";
 import { useEditor } from "@/features/editor/hooks/use-editor";
@@ -65,8 +64,7 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
       }
       setCreating(null);
     } catch (error) {
-      console.error(error);
-      toast.error(errorParse(error));
+      errorParse(error);
     }
   };
 
@@ -78,8 +76,7 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
       }
       renameFile({ id: item._id, name: newName });
     } catch (error) {
-      console.error(error);
-      toast.error(errorParse(error));
+      errorParse(error);
     }
   };
 

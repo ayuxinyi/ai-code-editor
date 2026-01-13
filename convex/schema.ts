@@ -39,4 +39,28 @@ export default defineSchema({
     .index("by_projectId", ["projectId"])
     .index("by_parentId", ["parentId"])
     .index("by_project_parent", ["projectId", "parentId"]),
+  // 对话表，用于存储用户与AI的对话记录
+  conversations: defineTable({
+    projectId: v.id("projects"),
+    title: v.string(),
+    updatedAt: v.number(),
+  }).index("by_projectId", ["projectId"]),
+  // 消息表，用于存储对话记录
+  messages: defineTable({
+    conversationId: v.id("conversations"),
+    projectId: v.id("projects"),
+    // 用户角色，用于区分用户和AI
+    role: v.union(v.literal("user"), v.literal("assistant")),
+    content: v.string(),
+    // 消息状态，用于区分消息是否处理完成
+    status: v.optional(
+      v.union(
+        v.literal("processing"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      )
+    ),
+  })
+    .index("by_conversationId", ["conversationId"])
+    .index("by_project_status", ["projectId", "status"]),
 });

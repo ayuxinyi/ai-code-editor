@@ -4,7 +4,7 @@ import {
   quickEditTooltipField,
 } from "./helpers/quick-edit-tooltip-field";
 
-export const quickEdit = (fileName: string) => [
+export const quickEdit = (_fileName: string) => [
   // 快速编辑状态管理,管理是否需要展示快速编辑的Tooltip
   quickEditState,
   // 快速编辑Tooltip字段,渲染快速编辑的Tooltip，进行快速编辑

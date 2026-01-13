@@ -4,7 +4,6 @@ import { XIcon } from "lucide-react";
 import type { FC } from "react";
 
 import { LoadingSwap } from "@/components/loading-swap";
-import { Spinner } from "@/components/ui/spinner";
 import { useFileById } from "@/features/projects/hooks/use-files";
 import { cn } from "@/lib/utils";
 
