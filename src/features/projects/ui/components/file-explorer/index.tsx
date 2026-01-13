@@ -62,7 +62,7 @@ export const FileExplorer: FC<Props> = ({ projectId }) => {
       }
       setCreating(null);
     } catch (error) {
-      toast.error(errorParse(error));
+      errorParse(error);
     }
   };
 

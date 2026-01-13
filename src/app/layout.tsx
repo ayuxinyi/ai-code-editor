@@ -1,4 +1,5 @@
 import "./globals.css";
+import "allotment/dist/style.css";
 
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Inter } from "next/font/google";

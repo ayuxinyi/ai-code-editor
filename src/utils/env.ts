@@ -26,6 +26,8 @@ export const EnvSchema = z.object({
   FIRECRAWL_API_KEY: string(),
   // Sentry 认证令牌
   SENTRY_AUTH_TOKEN: string(),
+  // Convex 内部密钥
+  POLARIS_CONVEX_INTERNAL_KEY: string(),
 });
 export type EnvSchema = output<typeof EnvSchema>;
 
