@@ -10,6 +10,8 @@ import { clouds } from "thememirror";
 import { customSetup } from "../../extensions/custom-setup";
 import { getLanguageExtensions } from "../../extensions/language-extension";
 import { minimap } from "../../extensions/minimap";
+import { quickEdit } from "../../extensions/quick-edit";
+import { selectionTooltip } from "../../extensions/selection-tooltip";
 import { suggestion } from "../../extensions/suggestion";
 import { customTheme } from "../../extensions/theme";
 
@@ -51,6 +53,10 @@ export const CodeEditor: FC<EditorProps> = ({
         languageExtensions,
         // AI 建议插件, 用于接受AI给出的建议，插件越靠前，优先级越高
         suggestion(filename),
+        // 快速编辑插件，用户可以选中某块文本后输入修改建议，通过AI进行修改
+        quickEdit(filename),
+        // 选中区域提示插件，会弹出操作提示框，包含两个按钮，一个为添加到聊天区域，一个为快捷修改
+        selectionTooltip(),
         // 绑定 Tab 键缩进
         keymap.of([indentWithTab]),
         // 最小地图插件
