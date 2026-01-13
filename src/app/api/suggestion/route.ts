@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       prompt,
       // 定义AI的输出格式，其返回结果为{suggestion: string}
       // output: Output.object({ schema: SuggestionSchema }),
-      temperature: 0.1,
+      // temperature: 0.1,
     });
     return NextResponse.json({ suggestion: text });
   } catch (error) {
