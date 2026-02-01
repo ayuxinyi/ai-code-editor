@@ -52,6 +52,14 @@ interface Props {
   projectId: Id<"projects">;
 }
 
+interface CancelResponse {
+  success: boolean;
+  message?: string;
+  cancelled?: boolean;
+  error?: string;
+  messageIds?: Id<"messages">[];
+}
+
 export const ConversationSection: FC<Props> = ({ projectId }) => {
   const [selectedConversationId, setSelectedConversationId] =
     useState<Id<"conversations"> | null>(null);
@@ -69,7 +77,7 @@ export const ConversationSection: FC<Props> = ({ projectId }) => {
   const conversationMessages = useMessages(activeConversationId);
   // 判断消息中是否存在正在处理中的
   const isProcessing = conversationMessages?.some(
-    message => message.status === "processing"
+    message => message.status === "processing",
   );
   const handleCreateConversation = async () => {
     try {
@@ -85,10 +93,11 @@ export const ConversationSection: FC<Props> = ({ projectId }) => {
     }
   };
 
+  // 提交消息
   const handleSubmit = async (message: PromptInputMessage) => {
     // 如果用户已经发送了一条消息，并且AI正在处理中，那么当我们再次点击时，我们需要取消处理
     if (isProcessing && !message.text) {
-      setInput("");
+      await handleCancel();
       return;
     }
     let conversationId = activeConversationId;
@@ -111,6 +120,26 @@ export const ConversationSection: FC<Props> = ({ projectId }) => {
       errorParse(error);
     } finally {
       setInput("");
+    }
+  };
+
+  const handleCancel = async () => {
+    try {
+      const res = await ky
+        .post("/api/messages/cancel", {
+          method: "post",
+          json: {
+            projectId,
+          },
+        })
+        .json<CancelResponse>();
+      if (res.success) {
+        toast.success(res.message ?? "取消成功");
+      } else {
+        toast.error(res.error ?? "取消失败");
+      }
+    } catch (error) {
+      errorParse(error);
     }
   };
 
@@ -157,6 +186,10 @@ export const ConversationSection: FC<Props> = ({ projectId }) => {
                     <LoaderIcon className="animate-spin size-4" />
                     <span>思考中...</span>
                   </div>
+                ) : message.status === "cancelled" ? (
+                  <span className="text-muted-foreground italic">
+                    Request Cancelled
+                  </span>
                 ) : (
                   <MessageResponse>{message.content}</MessageResponse>
                 )}

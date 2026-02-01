@@ -29,7 +29,7 @@ export const demoGenerate = inngest.createFunction(
               formats: ["markdown"],
             });
             return result.markdown ?? null;
-          })
+          }),
       );
       return results.filter(Boolean).join("\n\n");
     });
@@ -41,7 +41,7 @@ export const demoGenerate = inngest.createFunction(
     // 调用openrouter的模型生成文本
     await step.run("generate-text", async () => {
       return await generateText({
-        model: openrouter("xiaomi/mimo-v2-flash:free"),
+        model: openrouter("tngtech/deepseek-r1t2-chimera:free"),
         prompt: finalPrompt,
         temperature: 0.2,
         // 开启实验性的遥测功能，用于监控模型的调用
@@ -55,5 +55,5 @@ export const demoGenerate = inngest.createFunction(
         },
       });
     });
-  }
+  },
 );

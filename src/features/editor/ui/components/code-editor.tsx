@@ -30,10 +30,10 @@ export const CodeEditor: FC<EditorProps> = ({
 }) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
   const languageExtensions = useMemo(
     () => getLanguageExtensions(filename),
-    [filename]
+    [filename],
   );
 
   useEffect(() => {
@@ -44,7 +44,9 @@ export const CodeEditor: FC<EditorProps> = ({
       parent: editorRef.current,
       extensions: [
         // 主题
-        theme === "dark" ? oneDark : clouds,
+        theme === "dark" || (theme === "system" && resolvedTheme === "dark")
+          ? oneDark
+          : clouds,
         // 自定义主题
         customTheme,
         // 基础设置
@@ -76,7 +78,7 @@ export const CodeEditor: FC<EditorProps> = ({
       view.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- initialValue只是用来初始化编辑器的内容
-  }, [theme, languageExtensions]);
+  }, [theme, languageExtensions, resolvedTheme]);
 
   return <div ref={editorRef} className="pl-4 bg-background size-full" />;
 };
