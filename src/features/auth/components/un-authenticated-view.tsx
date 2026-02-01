@@ -1,9 +1,13 @@
+"use client";
 import { ArrowLeft, Lock, LogIn } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
 export const UnAuthenticatedView = () => {
+  const router = useRouter();
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-neutral-100 via-neutral-50 to-neutral-100 dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900 p-6">
       <div className="w-full max-w-md space-y-8">
@@ -39,15 +43,19 @@ export const UnAuthenticatedView = () => {
           <Button
             className="w-full bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-100 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
             size="default"
+            asChild={true}
           >
-            <LogIn className="w-4 h-4 mr-2" strokeWidth={2} />
-            立即登录
+            <Link href="/auth/sign-in">
+              <LogIn className="w-4 h-4 mr-2" strokeWidth={2} />
+              立即登录
+            </Link>
           </Button>
 
           <Button
             variant="outline"
             className="w-full bg-white/60 dark:bg-neutral-900/60 text-neutral-700 dark:text-neutral-300 backdrop-blur-sm border-neutral-200/80 dark:border-neutral-800/80 shadow-sm hover:shadow-md hover:bg-white/80 dark:hover:bg-neutral-900/80 transition-all duration-200"
             size="default"
+            onClick={() => router.back()}
           >
             <ArrowLeft className="w-4 h-4 mr-2" strokeWidth={2} />
             返回上一页
