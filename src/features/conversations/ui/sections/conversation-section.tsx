@@ -47,6 +47,7 @@ import {
   useCreateConversation,
   useMessages,
 } from "../../hooks/use-conversations";
+import { ConversationDialog } from "../components/conversation-dialog";
 
 interface Props {
   projectId: Id<"projects">;
@@ -79,6 +80,9 @@ export const ConversationSection: FC<Props> = ({ projectId }) => {
   const isProcessing = conversationMessages?.some(
     message => message.status === "processing",
   );
+
+  const [pastConversationsOpen, setPastConversationsOpen] = useState(false);
+
   const handleCreateConversation = async () => {
     try {
       const conversationId = await createConversation({
@@ -144,107 +148,119 @@ export const ConversationSection: FC<Props> = ({ projectId }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-sidebar">
-      <div className="h-8.75 flex items-center justify-between  border-b">
-        <div className="text-sm truncate pl-3">
-          {activeConversation?.title ?? DEFAULT_CONVERSATION_TITLE}
+    <>
+      <ConversationDialog
+        projectId={projectId}
+        open={pastConversationsOpen}
+        onOpenChange={setPastConversationsOpen}
+        onSelect={setSelectedConversationId}
+      />
+      <div className="flex flex-col h-full bg-sidebar">
+        <div className="h-8.75 flex items-center justify-between  border-b">
+          <div className="text-sm truncate pl-3">
+            {activeConversation?.title ?? DEFAULT_CONVERSATION_TITLE}
+          </div>
+          <div className="flex items-center px-1 gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon-xs"
+                  variant="highlight"
+                  onClick={() => setPastConversationsOpen(true)}
+                >
+                  <HistoryIcon className="size-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <div className="text-sm">历史记录</div>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon-xs"
+                  variant="highlight"
+                  onClick={handleCreateConversation}
+                >
+                  <PlusIcon className="size-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <div className="text-sm">新建聊天</div>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
-        <div className="flex items-center px-1 gap-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button size="icon-xs" variant="highlight">
-                <HistoryIcon className="size-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <div className="text-sm">历史记录</div>
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="icon-xs"
-                variant="highlight"
-                onClick={handleCreateConversation}
-              >
-                <PlusIcon className="size-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <div className="text-sm">新建聊天</div>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      </div>
-      <Conversation className="flex-1">
-        <ConversationContent>
-          {conversationMessages?.map((message, messageIndex) => (
-            <Message key={message._id} from={message.role}>
-              <MessageContent>
-                {message.status === "processing" ? (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <LoaderIcon className="animate-spin size-4" />
-                    <span>思考中...</span>
-                  </div>
-                ) : message.status === "cancelled" ? (
-                  <span className="text-muted-foreground italic">
-                    Request Cancelled
-                  </span>
-                ) : (
-                  <MessageResponse>{message.content}</MessageResponse>
-                )}
-              </MessageContent>
-              {message.role === "assistant" &&
-                message.status === "completed" &&
-                messageIndex === (conversationMessages?.length ?? 0) - 1 && (
-                  <MessageActions>
-                    <MessageAction
-                      label="复制"
-                      onClick={async () => {
-                        if (isCopied) return;
-                        await navigator.clipboard.writeText(message.content);
-                        setIsCopied(true);
-                        toast.success("复制成功");
-                        setTimeout(() => {
-                          setIsCopied(false);
-                        }, 2000);
-                      }}
-                    >
-                      {isCopied ? (
-                        <CopyCheckIcon className="size-3" />
-                      ) : (
-                        <CopyIcon className="size-3" />
-                      )}
-                    </MessageAction>
-                  </MessageActions>
-                )}
-            </Message>
-          ))}
-        </ConversationContent>
-        <ConversationScrollButton />
-      </Conversation>
-      <div className="p-3">
-        <PromptInput onSubmit={handleSubmit} className="mt-2">
-          <PromptInputBody>
-            <PromptInputTextarea
-              placeholder="描述您想要做什么，或询问项目相关问题..."
-              onChange={ev => setInput(ev.target.value)}
-              value={input}
-              disabled={isProcessing}
-            />
-          </PromptInputBody>
-          <PromptInputFooter>
-            <PromptInputTools />
-            <div className="flex items-center gap-2">
-              {/* <PromptInputSpeechButton /> */}
-              <PromptInputSubmit
-                disabled={isProcessing ? false : !input.trim() ? true : false}
-                status={isProcessing ? "streaming" : undefined}
+        <Conversation className="flex-1">
+          <ConversationContent>
+            {conversationMessages?.map((message, messageIndex) => (
+              <Message key={message._id} from={message.role}>
+                <MessageContent>
+                  {message.status === "processing" ? (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <LoaderIcon className="animate-spin size-4" />
+                      <span>思考中...</span>
+                    </div>
+                  ) : message.status === "cancelled" ? (
+                    <span className="text-muted-foreground italic">
+                      Request Cancelled
+                    </span>
+                  ) : (
+                    <MessageResponse>{message.content}</MessageResponse>
+                  )}
+                </MessageContent>
+                {message.role === "assistant" &&
+                  message.status === "completed" &&
+                  messageIndex === (conversationMessages?.length ?? 0) - 1 && (
+                    <MessageActions>
+                      <MessageAction
+                        label="复制"
+                        onClick={async () => {
+                          if (isCopied) return;
+                          await navigator.clipboard.writeText(message.content);
+                          setIsCopied(true);
+                          toast.success("复制成功");
+                          setTimeout(() => {
+                            setIsCopied(false);
+                          }, 2000);
+                        }}
+                      >
+                        {isCopied ? (
+                          <CopyCheckIcon className="size-3" />
+                        ) : (
+                          <CopyIcon className="size-3" />
+                        )}
+                      </MessageAction>
+                    </MessageActions>
+                  )}
+              </Message>
+            ))}
+          </ConversationContent>
+          <ConversationScrollButton />
+        </Conversation>
+        <div className="p-3">
+          <PromptInput onSubmit={handleSubmit} className="mt-2">
+            <PromptInputBody>
+              <PromptInputTextarea
+                placeholder="描述您想要做什么，或询问项目相关问题..."
+                onChange={ev => setInput(ev.target.value)}
+                value={input}
+                disabled={isProcessing}
               />
-            </div>
-          </PromptInputFooter>
-        </PromptInput>
+            </PromptInputBody>
+            <PromptInputFooter>
+              <PromptInputTools />
+              <div className="flex items-center gap-2">
+                {/* <PromptInputSpeechButton /> */}
+                <PromptInputSubmit
+                  disabled={isProcessing ? false : !input.trim() ? true : false}
+                  status={isProcessing ? "streaming" : undefined}
+                />
+              </div>
+            </PromptInputFooter>
+          </PromptInput>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
