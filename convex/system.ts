@@ -30,13 +30,13 @@ export const createMessage = mutation({
       v.union(
         v.literal("processing"),
         v.literal("completed"),
-        v.literal("cancelled")
-      )
+        v.literal("cancelled"),
+      ),
     ),
   },
   async handler(
     ctx,
-    { internalKey, conversationId, projectId, role, content, status }
+    { internalKey, conversationId, projectId, role, content, status },
   ) {
     validateInternalKey(internalKey);
     const messageId = await ctx.db.insert("messages", {
@@ -68,5 +68,41 @@ export const updateMessageContent = mutation({
       status: "completed" as const,
     });
     return messageId;
+  },
+});
+
+// 更新消息状态
+export const updateMessageStatus = mutation({
+  args: {
+    internalKey: v.string(),
+    messageId: v.id("messages"),
+    status: v.union(
+      v.literal("processing"),
+      v.literal("completed"),
+      v.literal("cancelled"),
+    ),
+  },
+  async handler(ctx, { internalKey, messageId, status }) {
+    validateInternalKey(internalKey);
+    await ctx.db.patch("messages", messageId, {
+      status,
+    });
+    return messageId;
+  },
+});
+// 获取项目中正在处理中的消息
+export const getProcessingMessages = query({
+  args: {
+    projectId: v.id("projects"),
+    internalKey: v.string(),
+  },
+  async handler(ctx, { projectId, internalKey }) {
+    validateInternalKey(internalKey);
+    return ctx.db
+      .query("messages")
+      .withIndex("by_project_status", q =>
+        q.eq("projectId", projectId).eq("status", "processing"),
+      )
+      .collect();
   },
 });
