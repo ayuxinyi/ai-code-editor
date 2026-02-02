@@ -12,7 +12,7 @@ type Events = {
   "demo/sentry-inngest": {
     data: undefined;
   };
-  "ai/message-sent": {
+  "conversations/message-sent": {
     data: {
       messageId: Id<"messages">;
       conversationId: Id<"conversations">;
@@ -20,7 +20,7 @@ type Events = {
       message: string;
     };
   };
-  "ai/message-cancel": {
+  "conversations/message-cancel": {
     data: {
       messageId: Id<"messages">;
     };

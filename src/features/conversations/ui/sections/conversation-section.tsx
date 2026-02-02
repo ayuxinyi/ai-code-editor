@@ -40,7 +40,7 @@ import {
 import { errorParse } from "@/utils/error-parse";
 
 import type { Id } from "../../../../../convex/_generated/dataModel";
-import { DEFAULT_CONVERSATION_TITLE } from "../../../../../convex/utils/constants";
+import { DEFAULT_CONVERSATION_TITLE } from "../../constant";
 import {
   useConversationById,
   useConversationByProject,
