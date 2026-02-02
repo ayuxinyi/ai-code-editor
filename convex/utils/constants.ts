@@ -1,1 +1,2 @@
-export const DEFAULT_CONVERSATION_TITLE = "新聊天";
+// 默认最近消息数量
+export const RECENT_MESSAGES_LIMIT = 10;

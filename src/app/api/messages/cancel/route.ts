@@ -11,7 +11,7 @@ import type { Id } from "../../../../../convex/_generated/dataModel";
 const requestSchema = object({
   projectId: custom<Id<"projects">>(
     val => typeof val === "string" && val.length > 0,
-    { message: "无效的项目 ID" },
+    { error: "无效的项目 ID" },
   ),
 });
 
@@ -47,7 +47,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
     processingMessages.map(async message => {
       // 取消正在运行的Inngest事件
       await inngest.send({
-        name: "ai/message-cancel",
+        name: "conversations/message-cancel",
         data: {
           messageId: message._id,
         },

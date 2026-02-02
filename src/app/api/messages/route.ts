@@ -57,7 +57,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
         });
         // 发送取消消息事件到inngest
         await inngest.send({
-          name: "ai/message-cancel",
+          name: "conversations/message-cancel",
           data: {
             messageId: message._id,
           },
@@ -86,7 +86,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   });
   // 调用inngest函数处理AI消息的生成
   const event = await inngest.send({
-    name: "ai/message-sent",
+    name: "conversations/message-sent",
     data: {
       messageId: assistantMessageId,
       conversationId,

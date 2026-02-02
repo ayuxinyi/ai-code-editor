@@ -5,7 +5,7 @@ export const errorParse = (error: unknown) => {
   console.error(error);
   let message = "未知错误";
   if (error instanceof ConvexError) {
-    message = error.message;
+    message = error.data;
   } else if (error instanceof Error) {
     message = error.message;
   }

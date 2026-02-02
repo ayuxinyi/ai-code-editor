@@ -2,6 +2,7 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  // 项目表，用于存储用户创建的项目
   projects: defineTable({
     name: v.string(),
     ownerId: v.string(),
@@ -10,16 +11,16 @@ export default defineSchema({
       v.union(
         v.literal("importing"),
         v.literal("completed"),
-        v.literal("failed")
-      )
+        v.literal("failed"),
+      ),
     ),
     exportStatus: v.optional(
       v.union(
         v.literal("exporting"),
         v.literal("completed"),
         v.literal("failed"),
-        v.literal("cancelled")
-      )
+        v.literal("cancelled"),
+      ),
     ),
     exportRepoUrl: v.optional(v.string()),
   })
@@ -57,8 +58,8 @@ export default defineSchema({
       v.union(
         v.literal("processing"),
         v.literal("completed"),
-        v.literal("cancelled")
-      )
+        v.literal("cancelled"),
+      ),
     ),
   })
     .index("by_conversationId", ["conversationId"])

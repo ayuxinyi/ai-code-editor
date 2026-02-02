@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import type { FC } from "react";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -44,25 +43,26 @@ export const FileExplorer: FC<Props> = ({ projectId }) => {
 
   const createFile = useFileCreate();
   const createFolder = useFolderCreate();
-  const handleCreate = (name: string) => {
+  const handleCreate = async (name: string) => {
     try {
       if (creating === "file") {
-        createFile({
+        await createFile({
           projectId,
           parentId: undefined,
           name,
           content: "",
         });
       } else if (creating === "folder") {
-        createFolder({
+        await createFolder({
           projectId,
           parentId: undefined,
           name,
         });
       }
-      setCreating(null);
     } catch (error) {
       errorParse(error);
+    } finally {
+      setCreating(null);
     }
   };
 
@@ -79,7 +79,7 @@ export const FileExplorer: FC<Props> = ({ projectId }) => {
           <ChevronRightIcon
             className={cn(
               "size-4 shrink-0 text-muted-foreground transition-transform",
-              isOpen && "rotate-90"
+              isOpen && "rotate-90",
             )}
           />
           <p className="text-sm uppercase line-clamp-1">
