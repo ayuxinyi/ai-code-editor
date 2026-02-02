@@ -1,11 +1,11 @@
 import { createTool } from "@inngest/agent-kit";
-import { ConvexError } from "convex/values";
 import { object } from "zod";
 
 import { convex } from "@/lib/convex-client";
 
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
+import { createToolError } from "./tool-helper";
 
 interface ListFilesToolOptions {
   internalKey: string;
@@ -23,7 +23,7 @@ export const createListFilesTools = ({
 }: ListFilesToolOptions) =>
   createTool({
     // 工具名称
-    name: "list-files",
+    name: "listFiles",
     // 工具描述，这很关键，AI 模型会根据这个描述来判断是否调用这个工具
     description:
       "列出项目中的所有文件和文件夹。返回每一项的名称、ID、类型以及父级 ID (parentId)。parentId 为 null 的项位于根目录。请利用 parentId 来解析文件夹结构——具有相同 parentId 的项属于同一个文件夹。",
@@ -38,7 +38,7 @@ export const createListFilesTools = ({
             internalKey,
           });
           if (files.length === 0) {
-            return "listFilesTool-列出项目文件失败：很抱歉，根据您提供的项目ID，并没有找到任何文件或文件夹。请确认项目ID是否正确。";
+            return `listFilesTool-列出项目文件失败：根据项目ID ${projectId}，并没有找到任何文件或文件夹。请确认项目ID是否正确。`;
           }
           // 对文件进行排序，文件夹优先显示
           const sorted = files.sort((a, b) => {
@@ -58,13 +58,7 @@ export const createListFilesTools = ({
           return JSON.stringify(fileList);
         });
       } catch (error) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : error instanceof ConvexError
-              ? error.data
-              : "未知错误";
-        return `listFilesTool-列出项目文件失败：${errorMessage}`;
+        return createToolError(error, "listFiles");
       }
     },
   });

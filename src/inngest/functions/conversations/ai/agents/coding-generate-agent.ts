@@ -6,8 +6,16 @@ import { createAgent } from "@inngest/agent-kit";
 
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { openAIModel } from "../openai-model";
-import { createReadFilesTool } from "../tools";
-import { createListFilesTools } from "../tools/list-files-tools";
+import {
+  createCreateFilesTool,
+  createCreateFolderTool,
+  createDeleteFilesTool,
+  createListFilesTools,
+  createReadFilesTool,
+  createRenameFileTool,
+  createScrapeUrls,
+  createUpdateFileTool,
+} from "../tools";
 
 /**
  * 创建编码生成 Agent
@@ -34,5 +42,11 @@ export const codingGenerateAgent = (
     tools: [
       createListFilesTools({ internalKey, projectId }),
       createReadFilesTool({ internalKey }),
+      createUpdateFileTool({ internalKey }),
+      createCreateFilesTool({ internalKey, projectId }),
+      createCreateFolderTool({ internalKey, projectId }),
+      createRenameFileTool({ internalKey }),
+      createDeleteFilesTool({ internalKey }),
+      createScrapeUrls(),
     ],
   });

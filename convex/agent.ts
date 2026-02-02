@@ -398,3 +398,20 @@ export const deleteFile = mutation({
     return fileId;
   },
 });
+
+export const getProjectById = query({
+  args: {
+    internalKey: v.string(),
+    projectId: v.id("projects"),
+  },
+  async handler(ctx, { internalKey, projectId }) {
+    validateInternalKey(internalKey);
+    const project = await ctx.db.get("projects", projectId);
+    if (!project) {
+      throw new ConvexError(
+        `很抱歉，根据您提供的项目ID ${projectId}，无法找到对应的项目，请检查项目ID是否正确。`,
+      );
+    }
+    return project;
+  },
+});
