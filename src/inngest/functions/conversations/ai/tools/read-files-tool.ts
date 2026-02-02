@@ -1,11 +1,11 @@
 import { createTool } from "@inngest/agent-kit";
-import { ConvexError } from "convex/values";
 import { array, object, string } from "zod";
 
 import { convex } from "@/lib/convex-client";
 
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
+import { createToolError } from "./tool-helper";
 
 interface ReadFilesToolOptions {
   internalKey: string;
@@ -62,18 +62,12 @@ export const createReadFilesTool = ({ internalKey }: ReadFilesToolOptions) =>
             }
           }
           if (results.length === 0) {
-            return "readFilesTool-读取文件失败：很抱歉，根据您提供的文件ID，并没有找到对应的文件内容。请使用有效的文件ID重试。";
+            return `readFilesTool-读取文件失败：操作完成，但未找到任何文件内容。请确认文件 ID 是否正确。尝试过的 ID: ${fileIds.join(", ")}。使用 listFiles 工具去获取有效的文件ID。`;
           }
           return JSON.stringify(results);
         });
       } catch (error) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : error instanceof ConvexError
-              ? error.data.message
-              : "未知错误";
-        return `readFilesTool-读取文件失败：操作失败，${errorMessage}`;
+        return createToolError(error, "readFiles");
       }
     },
   });
