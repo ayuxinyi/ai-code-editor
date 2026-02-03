@@ -23,6 +23,13 @@ export default defineSchema({
       ),
     ),
     exportRepoUrl: v.optional(v.string()),
+    // 项目设置，用于存储项目的安装命令和开发命令
+    settings: v.optional(
+      v.object({
+        installCommand: v.optional(v.string()),
+        devCommand: v.optional(v.string()),
+      }),
+    ),
   })
     // 定义一个索引，用于根据ownerId查询项目，可以根据ownerId快速查询用户所有的项目
     .index("by_ownerId", ["ownerId"]),
