@@ -51,7 +51,7 @@ export const useProjectRename = () =>
             ...existingProject,
             name,
             updatedAt: now,
-          }
+          },
         );
       }
 
@@ -64,9 +64,12 @@ export const useProjectRename = () =>
           existingProjects.map(project =>
             project._id === projectId
               ? { ...project, name, updatedAt: now }
-              : project
-          )
+              : project,
+          ),
         );
       }
-    }
+    },
   );
+
+export const useUpdateProjectSettings = () =>
+  useMutation(api.projects.updateSettings);

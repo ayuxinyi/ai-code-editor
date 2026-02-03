@@ -12,6 +12,7 @@ import {
   MIN_SIDEBAR_WIDTH,
 } from "@/constants";
 import { EditorSection } from "@/features/editor/ui/sections/editor-section";
+import { PreviewSection } from "@/features/preview/ui/sections/preview-section";
 import { cn } from "@/lib/utils";
 
 import type { Id } from "../../../../../convex/_generated/dataModel";
@@ -28,6 +29,7 @@ export const ProjectIdSection: FC<Props> = ({ projectId }) => {
 
   return (
     <div className="h-full flex flex-col">
+      {/* 顶部工具栏*/}
       <nav className="h-8.75 flex items-center bg-sidebar border-b">
         <ProjectTab
           label="代 码"
@@ -50,11 +52,12 @@ export const ProjectIdSection: FC<Props> = ({ projectId }) => {
           </div>
         </div>
       </nav>
+      {/* 代码编辑区 */}
       <div className="flex-1 relative">
         <div
           className={cn(
             "absolute inset-0",
-            isEditorActive ? "visible" : "invisible"
+            isEditorActive ? "visible" : "invisible",
           )}
         >
           <Allotment defaultSizes={[DEFAULT_SIDEBAR_WIDTH, DEFAULT_MAIN_SIZE]}>
@@ -76,10 +79,10 @@ export const ProjectIdSection: FC<Props> = ({ projectId }) => {
         <div
           className={cn(
             "absolute inset-0",
-            !isEditorActive ? "visible" : "invisible"
+            !isEditorActive ? "visible" : "invisible",
           )}
         >
-          <div>预 览</div>
+          <PreviewSection projectId={projectId} />
         </div>
       </div>
     </div>

@@ -6,8 +6,29 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
+  // 配置跨域头信息，这些信息会添加到next-header中
+  async headers() {
+    return [
+      {
+        // 配置所有路径都应用跨域头信息
+        source: "/:path*",
+        // 配置具体的跨域头信息，这里的配置是WebContainer的要求,必须配置，否则WebContainer会报错
+        headers: [
+          {
+            key: "Cross-Origin-Embedder-Policy",
+            value: "credentialless",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+        ],
+      },
+    ];
+  },
 };
 
+// 配置Sentry
 export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
