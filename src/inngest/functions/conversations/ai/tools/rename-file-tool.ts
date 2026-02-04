@@ -33,7 +33,7 @@ export const createRenameFileTool = ({
       }
       const { fileId, name } = data;
       try {
-        const file = await convex.query(api.agent.getFileById, {
+        const file = await convex.query(api.system.files.getFileById, {
           fileId: fileId as Id<"files">,
           internalKey,
         });
@@ -41,7 +41,7 @@ export const createRenameFileTool = ({
           return `renameFileTool-重命名文件失败：根据文件ID ${fileId}，并未找到对应的文件。请使用 listFiles 工具获取有效的文件ID。`;
         }
         await toolStep?.run("rename-file", async () => {
-          await convex.mutation(api.agent.renameFile, {
+          await convex.mutation(api.system.files.renameFile, {
             fileId: fileId as Id<"files">,
             internalKey,
             name,

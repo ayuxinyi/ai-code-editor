@@ -25,6 +25,29 @@ type Events = {
       messageId: Id<"messages">;
     };
   };
+  "github/import.repo": {
+    data: {
+      owner: string;
+      repo: string;
+      projectId: Id<"projects">;
+      githubAccessToken: string;
+    };
+  };
+  "github/export.repo": {
+    data: {
+      repoName: string;
+      description: string | undefined;
+      visibility: "public" | "private";
+      internalKey: string;
+      projectId: Id<"projects">;
+      githubAccessToken: string;
+    };
+  };
+  "github/export.cancel": {
+    data: {
+      projectId: Id<"projects">;
+    };
+  };
 };
 
 // Create a client to send and receive events

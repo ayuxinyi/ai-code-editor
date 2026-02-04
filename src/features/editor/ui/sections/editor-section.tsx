@@ -51,8 +51,8 @@ export const EditorSection: FC<Props> = ({ projectId }) => {
             <Image
               src="/logo-alt.svg"
               alt="Polaris"
-              width={70}
-              height={70}
+              width={150}
+              height={150}
               className="opacity-25"
             />
           </div>

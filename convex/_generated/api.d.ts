@@ -8,13 +8,14 @@
  * @module
  */
 
-import type * as agent from "../agent.js";
 import type * as auth from "../auth.js";
 import type * as conversations from "../conversations.js";
 import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as projects from "../projects.js";
-import type * as system from "../system.js";
+import type * as system_conversation from "../system/conversation.js";
+import type * as system_files from "../system/files.js";
+import type * as system_github from "../system/github.js";
 import type * as utils_auth_helper from "../utils/auth_helper.js";
 import type * as utils_constants from "../utils/constants.js";
 
@@ -25,13 +26,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  agent: typeof agent;
   auth: typeof auth;
   conversations: typeof conversations;
   files: typeof files;
   http: typeof http;
   projects: typeof projects;
-  system: typeof system;
+  "system/conversation": typeof system_conversation;
+  "system/files": typeof system_files;
+  "system/github": typeof system_github;
   "utils/auth_helper": typeof utils_auth_helper;
   "utils/constants": typeof utils_constants;
 }>;

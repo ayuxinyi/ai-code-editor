@@ -49,7 +49,7 @@ export const createReadFilesTool = ({ internalKey }: ReadFilesToolOptions) =>
             content: string;
           }> = [];
           for (const fileId of fileIds) {
-            const file = await convex.query(api.agent.getFileById, {
+            const file = await convex.query(api.system.files.getFileById, {
               fileId: fileId as Id<"files">,
               internalKey,
             });

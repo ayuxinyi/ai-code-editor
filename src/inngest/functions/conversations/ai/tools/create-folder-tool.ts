@@ -37,7 +37,7 @@ export const createCreateFolderTool = ({
       }
       const { name, parentId } = data;
       try {
-        const project = await convex.query(api.agent.getProjectById, {
+        const project = await convex.query(api.system.files.getProjectById, {
           projectId,
           internalKey,
         });
@@ -47,10 +47,13 @@ export const createCreateFolderTool = ({
         return await toolStep?.run("create-folder", async () => {
           if (parentId) {
             try {
-              const parentFile = await convex.query(api.agent.getFileById, {
-                internalKey,
-                fileId: parentId as Id<"files">,
-              });
+              const parentFile = await convex.query(
+                api.system.files.getFileById,
+                {
+                  internalKey,
+                  fileId: parentId as Id<"files">,
+                },
+              );
               if (!parentFile) {
                 return `createFolderTool-创建文件夹失败:根据父目录ID "${parentId}"，无法找到对应的目录，使用 listFiles 工具去获取有效的父目录ID。`;
               }
@@ -61,12 +64,15 @@ export const createCreateFolderTool = ({
               return `createFolderTool-创建文件夹失败:无效的父目录ID "${parentId}"，使用 listFiles 工具去获取有效的父目录ID，或者使用空字符串 "" 作为根目录。`;
             }
           }
-          const folderId = await convex.mutation(api.agent.createFolder, {
-            internalKey,
-            parentId: parentId ? (parentId as Id<"files">) : undefined,
-            name,
-            projectId,
-          });
+          const folderId = await convex.mutation(
+            api.system.files.createFolder,
+            {
+              internalKey,
+              parentId: parentId ? (parentId as Id<"files">) : undefined,
+              name,
+              projectId,
+            },
+          );
           return `createFolderTool-创建文件夹成功:文件夹 ${name} 已成功创建，ID 为 ${folderId}`;
         });
       } catch (error) {

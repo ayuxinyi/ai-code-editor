@@ -19,16 +19,20 @@ import { PreviewTerminal } from "../components/preview-terminal";
 
 interface PreviewSectionProps {
   projectId: Id<"projects">;
+  enabled: boolean;
 }
 
-export const PreviewSection: FC<PreviewSectionProps> = ({ projectId }) => {
+export const PreviewSection: FC<PreviewSectionProps> = ({
+  projectId,
+  enabled = true,
+}) => {
   const project = useProjectById(projectId);
   const [showTerminal, setShowTerminal] = useState(true);
 
   const { status, error, previewUrl, terminalOutput, restartWebContainer } =
     useWebContainer({
       projectId,
-      enabled: true,
+      enabled,
       settings: project?.settings,
     });
 
@@ -110,7 +114,7 @@ export const PreviewSection: FC<PreviewSectionProps> = ({ projectId }) => {
                 </div>
               </div>
             )}
-            {previewUrl && (
+            {previewUrl && !isLoading && !error && (
               <iframe
                 src={previewUrl}
                 className="size-full border-0"
