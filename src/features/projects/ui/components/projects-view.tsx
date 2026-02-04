@@ -17,12 +17,14 @@ import { FONT } from "@/constants";
 import { cn } from "@/lib/utils";
 
 import { useCreateProject } from "../../hooks/use-projects";
+import { ImportGithubDialog } from "./github/import-github-dialog";
 import { ProjectCommandDialog } from "./project-command-dialog";
 import { ProjectsList } from "./projects-list";
 
 export const ProjectsView = () => {
   const createProject = useCreateProject();
   const [commandDialogOpen, setCommandDialogOpen] = useState(false);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   const handleCreateProject = useCallback(() => {
     try {
@@ -52,6 +54,10 @@ export const ProjectsView = () => {
           ev.preventDefault();
           handleCreateProject();
         }
+        if (ev.key.toLowerCase() === "i") {
+          ev.preventDefault();
+          setImportDialogOpen(true);
+        }
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -62,6 +68,10 @@ export const ProjectsView = () => {
 
   return (
     <>
+      <ImportGithubDialog
+        open={importDialogOpen}
+        onOpenChange={setImportDialogOpen}
+      />
       <ProjectCommandDialog
         open={commandDialogOpen}
         onOpenChange={setCommandDialogOpen}
@@ -81,7 +91,7 @@ export const ProjectsView = () => {
               <h1
                 className={cn(
                   "text-4xl md:text-5xl font-semibold",
-                  FONT.className
+                  FONT.className,
                 )}
               >
                 Polaris
@@ -104,7 +114,7 @@ export const ProjectsView = () => {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => {}}
+                onClick={() => setImportDialogOpen(true)}
                 className="h-full items-start justify-start p-4 bg-background border flex flex-col gap-6 rounded-none"
               >
                 <div className="flex items-center justify-between w-full">

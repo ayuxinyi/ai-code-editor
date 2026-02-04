@@ -4,25 +4,23 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { object, string, ZodError } from "zod";
 
-import { inngest } from "@/inngest/client";
 import { fetchAuthQuery, isAuthenticated } from "@/lib/auth-server";
 import { convex } from "@/lib/convex-client";
 
-import { api } from "../../../../../convex/_generated/api";
-import type { Id } from "../../../../../convex/_generated/dataModel";
+import { api } from "../../../../../../convex/_generated/api";
+import type { Id } from "../../../../../../convex/_generated/dataModel";
 
 const requestSchema = object({
-  projectId: string("请输入项目id").min(1, "请输入项目id"),
+  projectId: string("请输入项目id").min(1, "项目id不能为空"),
 });
 
 /**
- * 取消项目的导出操作
+ * 重置项目的导出状态
  * @param req 请求体，包含项目id
- * @returns 取消成功的项目id
+ * @returns 重置成功的项目id
  */
 export async function POST(req: NextRequest) {
   try {
-    // 1. 检查用户是否已登录
     const hasAuth = await isAuthenticated();
     if (!hasAuth) {
       return NextResponse.json(
@@ -38,7 +36,6 @@ export async function POST(req: NextRequest) {
         { status: 500 },
       );
     }
-    // 2. 解析请求体
     const body = await req.json();
     const { projectId } = requestSchema.parse(body);
 
@@ -53,23 +50,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const event = await inngest.send({
-      name: "github/export.cancel",
-      data: {
-        projectId: projectId as Id<"projects">,
-      },
-    });
-
     await convex.mutation(api.system.github.updateProjectExportStatus, {
       projectId: projectId as Id<"projects">,
       internalKey,
-      status: "cancelled",
+      status: undefined,
+      repoUrl: undefined,
     });
-    return NextResponse.json({
-      success: true,
-      projectId,
-      eventId: event.ids[0],
-    });
+
+    return NextResponse.json({ success: true, projectId });
   } catch (error) {
     console.error("🚀 ~ POST ~ error:", error);
     let errorMessage = "很抱歉，由于未知错误导致github仓库导入失败";
