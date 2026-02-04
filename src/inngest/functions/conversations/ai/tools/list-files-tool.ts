@@ -33,7 +33,7 @@ export const createListFilesTools = ({
     async handler(_, { step: toolStep }) {
       try {
         return await toolStep?.run("list-files", async () => {
-          const files = await convex.query(api.agent.getProjectFiles, {
+          const files = await convex.query(api.system.files.getProjectFiles, {
             projectId,
             internalKey,
           });

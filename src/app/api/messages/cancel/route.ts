@@ -29,7 +29,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
 
   // 查找该项目中正在处理中的消息
   const processingMessages = await convex.query(
-    api.system.getProcessingMessages,
+    api.system.conversation.getProcessingMessages,
     {
       projectId,
       internalKey,
@@ -53,7 +53,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
         },
       });
       // 更新消息状态为已取消
-      await convex.mutation(api.system.updateMessageStatus, {
+      await convex.mutation(api.system.conversation.updateMessageStatus, {
         internalKey,
         messageId: message._id,
         status: "cancelled",

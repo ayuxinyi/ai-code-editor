@@ -40,7 +40,7 @@ export const createDeleteFilesTool = ({
         type: string;
       }> = [];
       for (const fileId of fileIds) {
-        const file = await convex.query(api.agent.getFileById, {
+        const file = await convex.query(api.system.files.getFileById, {
           fileId: fileId as Id<"files">,
           internalKey,
         });
@@ -59,7 +59,7 @@ export const createDeleteFilesTool = ({
         return await toolStep?.run("delete-files", async () => {
           const results: Array<string> = [];
           for (const file of filesToDelete) {
-            await convex.mutation(api.agent.deleteFile, {
+            await convex.mutation(api.system.files.deleteFile, {
               fileId: file.id,
               internalKey,
             });

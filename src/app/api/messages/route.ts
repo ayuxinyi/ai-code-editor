@@ -21,10 +21,13 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   const validatedPayload = MessageRequestSchema.parse(body);
   const { conversationId, message } = validatedPayload;
   // 获取数据库中的对话
-  const conversation = await convex.query(api.system.getConversationById, {
-    conversationId,
-    internalKey,
-  });
+  const conversation = await convex.query(
+    api.system.conversation.getConversationById,
+    {
+      conversationId,
+      internalKey,
+    },
+  );
   if (!conversation) {
     throw new AppError(
       "很抱歉，该对话不存在，请重新尝试或联系客服！",
@@ -38,7 +41,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
 
   // 先获取所有正在处理的消息
   const processingMessages = await convex.query(
-    api.system.getProcessingMessages,
+    api.system.conversation.getProcessingMessages,
     {
       projectId,
       internalKey,
@@ -50,7 +53,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
     await Promise.all(
       processingMessages.map(async message => {
         // 变更数据库中的消息状态为cancelled
-        await convex.mutation(api.system.updateMessageStatus, {
+        await convex.mutation(api.system.conversation.updateMessageStatus, {
           internalKey,
           messageId: message._id,
           status: "cancelled",
@@ -67,7 +70,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   }
 
   // 创建一个用户信息
-  await convex.mutation(api.system.createMessage, {
+  await convex.mutation(api.system.conversation.createMessage, {
     content: message,
     conversationId,
     projectId,
@@ -76,14 +79,17 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   });
   // 创建一个AI消息，其状态为processing，这主要是用于在前端展示一个占位符，
   // 以提示用户AI正在生成回复，后续inngest函数在生成AI回复后，会更新convex数据库中这条消息的内容及状态
-  const assistantMessageId = await convex.mutation(api.system.createMessage, {
-    content: "",
-    projectId,
-    conversationId,
-    role: "assistant",
-    internalKey,
-    status: "processing",
-  });
+  const assistantMessageId = await convex.mutation(
+    api.system.conversation.createMessage,
+    {
+      content: "",
+      projectId,
+      conversationId,
+      role: "assistant",
+      internalKey,
+      status: "processing",
+    },
+  );
   // 调用inngest函数处理AI消息的生成
   const event = await inngest.send({
     name: "conversations/message-sent",

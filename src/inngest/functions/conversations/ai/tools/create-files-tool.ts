@@ -49,7 +49,7 @@ export const createCreateFilesTool = ({
       }
       const { files, parentId } = data;
       try {
-        const project = await convex.query(api.agent.getProjectById, {
+        const project = await convex.query(api.system.files.getProjectById, {
           internalKey,
           projectId,
         });
@@ -61,10 +61,13 @@ export const createCreateFilesTool = ({
           if (parentId && parentId !== "") {
             try {
               resolvedParentId = parentId as Id<"files">;
-              const parentFolder = await convex.query(api.agent.getFileById, {
-                fileId: resolvedParentId,
-                internalKey,
-              });
+              const parentFolder = await convex.query(
+                api.system.files.getFileById,
+                {
+                  fileId: resolvedParentId,
+                  internalKey,
+                },
+              );
               if (!parentFolder) {
                 return `createFilesTool-创建文件失败:根据父目录ID "${parentId}"，无法找到对应的目录，使用 listFiles 工具去获取有效的父目录ID。`;
               }
@@ -75,7 +78,7 @@ export const createCreateFilesTool = ({
               return `createFilesTool-创建文件失败:无效的父目录ID "${parentId}"，使用 listFiles 工具去获取有效的父目录ID，或者使用空字符串 "" 作为根目录。`;
             }
           }
-          const results = await convex.mutation(api.agent.createFiles, {
+          const results = await convex.mutation(api.system.files.createFiles, {
             files,
             parentId: resolvedParentId,
             projectId,

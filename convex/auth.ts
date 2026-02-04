@@ -28,6 +28,8 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       github: {
         clientId: process.env.GITHUB_CLIENT_ID!,
         clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+        // repo:指的是访问用户仓库的权限
+        scope: ["repo", "read:user", "user:email"],
       },
     },
   });

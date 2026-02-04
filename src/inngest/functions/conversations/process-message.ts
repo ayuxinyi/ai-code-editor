@@ -15,6 +15,7 @@ export const processMessage = inngest.createFunction(
   {
     id: "conversations-process-message",
     name: "Conversations Process Message",
+    description: "用于调用AI代理进行处理，包括对话标题和代码生成",
     // 取消inngest函数的执行
     cancelOn: [
       {
@@ -34,7 +35,7 @@ export const processMessage = inngest.createFunction(
         );
       }
       await step.run("update-assistant-message-db-failure", async () => {
-        await convex.mutation(api.system.updateMessageContent, {
+        await convex.mutation(api.system.conversation.updateMessageContent, {
           messageId,
           internalKey,
           content:
@@ -61,7 +62,7 @@ export const processMessage = inngest.createFunction(
     // 1.更改对话的标题
     // 1.1 获取对话信息
     const conversation = await step.run("get-conversation", async () => {
-      return await convex.query(api.system.getConversationById, {
+      return await convex.query(api.system.conversation.getConversationById, {
         conversationId,
         internalKey,
       });
@@ -76,7 +77,7 @@ export const processMessage = inngest.createFunction(
 
     // 1.3 获取当前对话的最近消息，这些消息将被作为AI助手的上下文
     const recentMessages = await step.run("get-recent-messages", async () => {
-      return await convex.query(api.agent.getRecentMessages, {
+      return await convex.query(api.system.conversation.getRecentMessages, {
         conversationId,
         internalKey,
         limit: 10,
@@ -125,11 +126,14 @@ export const processMessage = inngest.createFunction(
         // 1.4.5.3 更新对话标题
         if (title) {
           await step.run("update-conversation-title", async () => {
-            await convex.mutation(api.agent.updateConversationTitle, {
-              conversationId,
-              internalKey,
-              title,
-            });
+            await convex.mutation(
+              api.system.conversation.updateConversationTitle,
+              {
+                conversationId,
+                internalKey,
+                title,
+              },
+            );
           });
         }
       }
@@ -203,7 +207,7 @@ export const processMessage = inngest.createFunction(
 
     // 2.4 更新AI助手的回复，将最终结果写入数据库，并同时将消息状态设置为已完成
     await step.run("update-assistant-message-db", async () => {
-      await convex.mutation(api.system.updateMessageContent, {
+      await convex.mutation(api.system.conversation.updateMessageContent, {
         messageId,
         internalKey,
         content: assistantDefaultResponse,

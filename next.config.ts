@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     return [
       {
         // 配置所有路径都应用跨域头信息
-        source: "/:path*",
+        source: "/projects/:path*",
         // 配置具体的跨域头信息，这里的配置是WebContainer的要求,必须配置，否则WebContainer会报错
         headers: [
           {

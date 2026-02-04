@@ -30,7 +30,7 @@ export const createUpdateFileTool = ({ internalKey }: UpdateFileToolOptions) =>
       }
       const { fileId, content } = data;
       try {
-        const file = await convex.query(api.agent.getFileById, {
+        const file = await convex.query(api.system.files.getFileById, {
           fileId: fileId as Id<"files">,
           internalKey,
         });
@@ -43,7 +43,7 @@ export const createUpdateFileTool = ({ internalKey }: UpdateFileToolOptions) =>
         }
 
         await toolStep?.run("update-file", async () => {
-          await convex.mutation(api.agent.updateFile, {
+          await convex.mutation(api.system.files.updateFile, {
             fileId: fileId as Id<"files">,
             internalKey,
             content,

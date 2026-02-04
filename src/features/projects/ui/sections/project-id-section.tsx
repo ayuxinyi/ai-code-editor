@@ -82,7 +82,7 @@ export const ProjectIdSection: FC<Props> = ({ projectId }) => {
             !isEditorActive ? "visible" : "invisible",
           )}
         >
-          <PreviewSection projectId={projectId} />
+          <PreviewSection projectId={projectId} enabled={!isEditorActive} />
         </div>
       </div>
     </div>
