@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { object, url, ZodError } from "zod";
 
+import { GITHUB_UNAUTHORIZED_CODE } from "@/constants";
 import { inngest } from "@/inngest/client";
 import { fetchAuthQuery, isAuthenticated } from "@/lib/auth-server";
 import { convex } from "@/lib/convex-client";
@@ -59,7 +60,10 @@ export async function POST(req: NextRequest) {
     );
     if (!accessToken || !expiresAt || expiresAt.getTime() < Date.now()) {
       return NextResponse.json(
-        { error: "很抱歉，您的github授权已过期或无效，请重新登录" },
+        {
+          error: "很抱歉，您的github授权已过期或无效，请重新登录",
+          code: GITHUB_UNAUTHORIZED_CODE,
+        },
         { status: 401 },
       );
     }

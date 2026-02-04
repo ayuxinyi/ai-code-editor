@@ -49,8 +49,8 @@ export const PreviewSection: FC<PreviewSectionProps> = ({
           className="h-full rounded-none"
           disabled={isLoading}
           onClick={restartWebContainer}
-          title="Restart container"
-          aria-label="Restart container"
+          title="重启预览容器"
+          aria-label="重启预览容器"
         >
           <RefreshCcwIcon className="size-3" />
         </Button>
@@ -59,19 +59,19 @@ export const PreviewSection: FC<PreviewSectionProps> = ({
           {isLoading && (
             <div className="flex items-center gap-1.5">
               <Loader2Icon className="size-3 animate-spin" />
-              {status === "booting" ? "Starting..." : "Installing..."}
+              {status === "booting" ? "正在启动环境..." : "正在安装依赖..."}
             </div>
           )}
           {previewUrl && <span className="truncate">{previewUrl}</span>}
-          {!isLoading && !previewUrl && !error && <span>Ready to preview</span>}
+          {!isLoading && !previewUrl && !error && <span>预览准备就绪</span>}
         </div>
         {/* 展示终端设置弹窗 */}
         <Button
           size="sm"
           variant="ghost"
           className="h-full rounded-none"
-          title="Toggle terminal"
-          aria-label="Toggle terminal"
+          title="切换终端显示"
+          aria-label="切换终端显示"
           onClick={() => setShowTerminal(prev => !prev)}
         >
           <TerminalSquareIcon className="size-3" />
@@ -99,7 +99,7 @@ export const PreviewSection: FC<PreviewSectionProps> = ({
                     variant="outline"
                   >
                     <RefreshCcwIcon className="size-4" />
-                    Restart
+                    重新启动
                   </Button>
                 </div>
               </div>
@@ -109,7 +109,9 @@ export const PreviewSection: FC<PreviewSectionProps> = ({
                 <div className="flex flex-col items-center gap-2 max-w-md mx-auto text-center">
                   <Loader2Icon className="size-6 animate-spin" />
                   <p className="text-sm font-medium">
-                    {status === "booting" ? "Starting..." : "Installing..."}
+                    {status === "booting"
+                      ? "正在启动环境..."
+                      : "正在安装依赖..."}
                   </p>
                 </div>
               </div>
@@ -118,8 +120,8 @@ export const PreviewSection: FC<PreviewSectionProps> = ({
               <iframe
                 src={previewUrl}
                 className="size-full border-0"
-                title="Preview"
-                aria-label="Preview"
+                title="项目预览"
+                aria-label="项目预览"
               />
             )}
           </Allotment.Pane>
@@ -128,7 +130,7 @@ export const PreviewSection: FC<PreviewSectionProps> = ({
               <div className="h-full flex flex-col bg-background border-t">
                 <div className="h-7 flex items-center px-3 text-xs gap-1.5 text-muted-foreground border-b border-border/50 shrink-0">
                   <TerminalSquareIcon className="size-3" />
-                  Terminal
+                  终端
                 </div>
                 <PreviewTerminal output={terminalOutput} />
               </div>

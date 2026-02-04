@@ -3,6 +3,7 @@ import { NonRetriableError } from "inngest";
 import { type NextRequest, NextResponse } from "next/server";
 import { enum as enum_, object, string, ZodError } from "zod";
 
+import { GITHUB_UNAUTHORIZED_CODE } from "@/constants";
 import { inngest } from "@/inngest/client";
 import { fetchAuthQuery, isAuthenticated } from "@/lib/auth-server";
 
@@ -53,7 +54,10 @@ export async function POST(req: NextRequest) {
     );
     if (!accessToken || !expiresAt || expiresAt.getTime() < Date.now()) {
       return NextResponse.json(
-        { error: "很抱歉，您的github授权已过期或无效，请重新登录" },
+        {
+          error: "很抱歉，您的github授权已过期或无效，请重新登录",
+          code: GITHUB_UNAUTHORIZED_CODE,
+        },
         { status: 401 },
       );
     }
@@ -75,7 +79,6 @@ export async function POST(req: NextRequest) {
         repoName,
         description,
         visibility,
-        internalKey,
         projectId: projectId as Id<"projects">,
         githubAccessToken: accessToken,
       },

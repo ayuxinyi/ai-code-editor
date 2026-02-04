@@ -38,7 +38,6 @@ type Events = {
       repoName: string;
       description: string | undefined;
       visibility: "public" | "private";
-      internalKey: string;
       projectId: Id<"projects">;
       githubAccessToken: string;
     };

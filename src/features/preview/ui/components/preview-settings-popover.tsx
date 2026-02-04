@@ -93,7 +93,7 @@ export const PreviewSettingsPopover: FC<PreviewSettingsPopoverProps> = ({
             <div className="space-y-1">
               <h4 className="font-medium text-sm">预览设置</h4>
               <p className="text-xs text-muted-foreground">
-                Configure how your project runs in the preview environment.
+                配置项目在预览环境中的运行方式。
               </p>
             </div>
             <form.Field name="installCommand">
@@ -108,9 +108,7 @@ export const PreviewSettingsPopover: FC<PreviewSettingsPopoverProps> = ({
                     onChange={ev => field.handleChange(ev.target.value)}
                     placeholder="npm install"
                   />
-                  <FieldDescription>
-                    Command to install dependencies.
-                  </FieldDescription>
+                  <FieldDescription>用于安装项目依赖的命令。</FieldDescription>
                 </Field>
               )}
             </form.Field>
@@ -127,7 +125,7 @@ export const PreviewSettingsPopover: FC<PreviewSettingsPopoverProps> = ({
                     placeholder="npm run dev"
                   />
                   <FieldDescription>
-                    Command to start the development server.
+                    用于启动开发服务器的命令。
                   </FieldDescription>
                 </Field>
               )}
