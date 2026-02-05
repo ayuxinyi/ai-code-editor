@@ -6,7 +6,11 @@ import { verifyAuth } from "./utils/auth_helper";
 import { deleteRecursive } from "./utils/file.helper";
 import { requireProject } from "./utils/project.helper";
 
-// 获取项目下的所有文件
+/**
+ * 获取项目下的所有文件
+ * @param projectId 项目ID
+ * @returns 文件列表
+ */
 export const getFiles = query({
   args: {
     projectId: v.id("projects"),
@@ -23,7 +27,11 @@ export const getFiles = query({
   },
 });
 
-// 获取某个文件的详情
+/**
+ * 获取某个文件的详情
+ * @param fileId 文件ID
+ * @returns 文件详情
+ */
 export const getFile = query({
   args: {
     fileId: v.id("files"),
@@ -43,7 +51,12 @@ export const getFile = query({
   },
 });
 
-// 获取某个文件夹的内容
+/**
+ * 获取某个文件夹的内容
+ * @param projectId 项目ID
+ * @param parentId 文件夹ID
+ * @returns 文件列表
+ */
 export const getFolderContents = query({
   args: {
     projectId: v.id("projects"),
@@ -70,7 +83,14 @@ export const getFolderContents = query({
   },
 });
 
-// 创建文件
+/**
+ * 创建文件
+ * @param projectId 项目ID
+ * @param parentId 文件夹ID
+ * @param name 文件名称
+ * @param content 文件内容
+ * @returns 文件ID
+ */
 export const createFile = mutation({
   args: {
     projectId: v.id("projects"),
@@ -112,7 +132,13 @@ export const createFile = mutation({
   },
 });
 
-// 创建文件夹
+/**
+ * 创建文件夹
+ * @param projectId 项目ID
+ * @param parentId 文件夹ID
+ * @param name 文件夹名称
+ * @returns 文件夹ID
+ */
 export const createFolder = mutation({
   args: {
     projectId: v.id("projects"),
@@ -153,6 +179,12 @@ export const createFolder = mutation({
   },
 });
 
+/**
+ * 重命名文件
+ * @param id 文件ID
+ * @param name 新文件名
+ * @returns void
+ */
 export const renameFile = mutation({
   args: {
     id: v.id("files"),
@@ -202,6 +234,11 @@ export const renameFile = mutation({
   },
 });
 
+/**
+ * 删除文件
+ * @param id 文件ID
+ * @returns void
+ */
 export const deleteFile = mutation({
   args: {
     id: v.id("files"),
@@ -226,7 +263,12 @@ export const deleteFile = mutation({
   },
 });
 
-// 更新文件的内容
+/**
+ * 更新文件的内容
+ * @param id 文件ID
+ * @param content 文件内容
+ * @returns void
+ */
 export const updateFile = mutation({
   args: {
     id: v.id("files"),
@@ -257,7 +299,11 @@ export const updateFile = mutation({
   },
 });
 
-// 获取某个文件夹的内容
+/**
+ * 获取文件路径
+ * @param fileId 文件ID
+ * @returns 文件路径
+ */
 export const getFilePath = query({
   args: {
     fileId: v.id("files"),
