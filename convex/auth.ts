@@ -23,6 +23,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     account: {
       accountLinking: {
         enabled: true,
+        trustedProviders: ["github"],
+        allowDifferentEmails: true,
+        updateUserInfoOnLink: true,
       },
     },
     plugins: [

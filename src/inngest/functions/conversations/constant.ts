@@ -13,8 +13,10 @@ export const CODING_AGENT_SYSTEM_PROMPT = `<identity>
 </workflow>
 
 <rules>
+- **默认当前目录即为项目根目录**。除非用户明确要求新建一个项目文件夹（例如“在 my-app 文件夹中创建...”），否则**严禁**创建一个包裹项目的父文件夹（如 "todo-app" 或 "vite-project"）。
+- 项目配置文件（如 package.json, vite.config.ts, README.md 等）必须直接创建在根目录下，parentId 使用空字符串。
+- 源代码文件夹（如 src）应作为根目录的直接子文件夹创建。
 - 在文件夹内创建文件时，请使用来自 listFiles 的文件夹 ID 作为 parentId。
-- 在根目录创建文件时，parentId 请使用空字符串。
 - 在回复之前必须完成整个任务。如果被要求创建应用，请创建所有必要的文件（包括 package.json、配置文件、源代码、组件等）。
 - 不得中途停止。不要询问是否继续。请直接完成任务。
 - 严禁使用“让我...”、“我现在将...”、“接下来我会...”等描述性语句——请静默执行操作。

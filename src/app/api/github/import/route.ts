@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { userId } = await fetchAuthQuery(api.auth.getCurrentUser);
+    const { _id: userId } = await fetchAuthQuery(api.auth.getCurrentUser);
     if (!userId) {
       return NextResponse.json(
         { error: "很抱歉，您的用户信息不存在，请联系管理员" },
@@ -55,10 +55,10 @@ export async function POST(req: NextRequest) {
     const { owner, repo } = parseGithubUrl(url);
 
     // 3. 获取github access token
-    const { accessToken, expiresAt } = await fetchAuthQuery(
+    const { accessToken } = await fetchAuthQuery(
       api.system.github.getGithubAccessToken,
     );
-    if (!accessToken || !expiresAt || expiresAt.getTime() < Date.now()) {
+    if (!accessToken) {
       return NextResponse.json(
         {
           error: "很抱歉，您的github授权已过期或无效，请重新登录",
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, projectId });
   } catch (error) {
-    console.error("🚀 ~ POST ~ error:", error);
+    console.error("🚀 ~ POST ~ error:", { error });
     let errorMessage = "很抱歉，由于未知错误导致github仓库导入失败";
     if (error instanceof ZodError) {
       errorMessage = error.issues[0].message;

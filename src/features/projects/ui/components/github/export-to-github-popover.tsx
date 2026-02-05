@@ -9,7 +9,7 @@ import {
   XCircleIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { type FC, useState } from "react";
+import { type FC, useState, useTransition } from "react";
 import { FaGithub } from "react-icons/fa";
 import { toast } from "sonner";
 import { enum as enum_, object, string } from "zod";
@@ -58,6 +58,7 @@ export const ExportToGithubPopover: FC<ExportToGithubFormValues> = ({
 }) => {
   const project = useProjectById(projectId);
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const exportStatus = project?.exportStatus;
   const exportRepoUrl = project?.exportRepoUrl;
@@ -111,28 +112,32 @@ export const ExportToGithubPopover: FC<ExportToGithubFormValues> = ({
     },
   });
 
-  const handleCancelExport = async () => {
-    try {
-      await ky.post("/api/github/export/cancel", {
-        json: { projectId },
-      });
-      toast.info("导出任务已取消");
-      setOpen(false);
-    } catch (error) {
-      errorParse(error);
-    }
+  const handleCancelExport = () => {
+    startTransition(async () => {
+      try {
+        await ky.post("/api/github/export/cancel", {
+          json: { projectId },
+        });
+        toast.info("导出任务已取消");
+        setOpen(false);
+      } catch (error) {
+        errorParse(error);
+      }
+    });
   };
 
-  const handleResetExport = async () => {
-    try {
-      await ky.post("/api/github/export/reset", {
-        json: { projectId },
-      });
-      toast.success("状态已重置，可进行新的导出操作");
-      setOpen(false);
-    } catch (error) {
-      errorParse(error);
-    }
+  const handleResetExport = () => {
+    startTransition(async () => {
+      try {
+        await ky.post("/api/github/export/reset", {
+          json: { projectId },
+        });
+        toast.success("状态已重置，可进行新的导出操作");
+        setOpen(false);
+      } catch (error) {
+        errorParse(error);
+      }
+    });
   };
 
   const renderContent = () => {
@@ -176,6 +181,7 @@ export const ExportToGithubPopover: FC<ExportToGithubFormValues> = ({
               size="sm"
               asChild
               className="w-full"
+              disabled={isPending}
             >
               <Link
                 href={exportRepoUrl}
@@ -190,9 +196,10 @@ export const ExportToGithubPopover: FC<ExportToGithubFormValues> = ({
               size="sm"
               variant="secondary"
               className="w-full"
+              disabled={isPending}
               onClick={handleResetExport}
             >
-              完成并关闭
+              重新导出
             </Button>
           </div>
         </div>
@@ -215,6 +222,7 @@ export const ExportToGithubPopover: FC<ExportToGithubFormValues> = ({
             variant="outline"
             size="sm"
             className="w-full mt-2"
+            disabled={isPending}
           >
             重置并重试
           </Button>
