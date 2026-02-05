@@ -1,3 +1,4 @@
+import { logger } from "@sentry/nextjs";
 import { NonRetriableError } from "inngest";
 import { isBinaryFile } from "isbinaryfile";
 import ky from "ky";
@@ -184,6 +185,9 @@ export const importGithubRepo = inngest.createFunction(
           }
         } catch (error) {
           console.error(`导入文件${file.path}失败`, error);
+          logger.error(`导入文件${file.path}失败`, {
+            error,
+          });
         }
       }
     });

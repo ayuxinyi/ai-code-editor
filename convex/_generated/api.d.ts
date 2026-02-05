@@ -16,6 +16,7 @@ import type * as projects from "../projects.js";
 import type * as system_conversation from "../system/conversation.js";
 import type * as system_files from "../system/files.js";
 import type * as system_github from "../system/github.js";
+import type * as system_project from "../system/project.js";
 import type * as utils_auth_helper from "../utils/auth_helper.js";
 import type * as utils_constants from "../utils/constants.js";
 
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   "system/conversation": typeof system_conversation;
   "system/files": typeof system_files;
   "system/github": typeof system_github;
+  "system/project": typeof system_project;
   "utils/auth_helper": typeof utils_auth_helper;
   "utils/constants": typeof utils_constants;
 }>;

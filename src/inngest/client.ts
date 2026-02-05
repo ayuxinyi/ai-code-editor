@@ -17,6 +17,7 @@ type Events = {
       messageId: Id<"messages">;
       conversationId: Id<"conversations">;
       projectId: Id<"projects">;
+      // 客户端发送的消息内容
       message: string;
     };
   };
