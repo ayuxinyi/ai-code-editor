@@ -33,8 +33,8 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
   const [creating, setCreating] = useState<"file" | "folder" | null>(null);
 
   // file相关操作
-  const renameFile = useRenameFile();
-  const deleteFile = useDeleteFile();
+  const renameFile = useRenameFile({ projectId, parentId: item.parentId });
+  const deleteFile = useDeleteFile({ projectId, parentId: item.parentId });
   const createFile = useFileCreate();
   const createFolder = useFolderCreate();
   const folderContents = useFolderContents({
@@ -46,17 +46,17 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
   // 编辑器相关操作
   const { openFile, closeTab, activeTabId } = useEditor(projectId);
 
-  const handleCreate = (name: string) => {
+  const handleCreate = async (name: string) => {
     try {
       if (creating === "file") {
-        createFile({
+        await createFile({
           projectId,
           parentId: item._id,
           name,
           content: "",
         });
       } else {
-        createFolder({
+        await createFolder({
           projectId,
           parentId: item._id,
           name,
@@ -68,13 +68,13 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
     }
   };
 
-  const handleRename = (newName: string) => {
+  const handleRename = async (newName: string) => {
     try {
       setIsRenaming(false);
       if (newName === item.name) {
         return;
       }
-      renameFile({ id: item._id, name: newName });
+      await renameFile({ id: item._id, name: newName });
     } catch (error) {
       errorParse(error);
     }
@@ -114,11 +114,11 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
           openFile(item._id, { pinned: true });
         }}
         onRename={() => setIsRenaming(true)}
-        onDelete={() => {
+        onDelete={async () => {
           // 关闭文件tab
           closeTab(item._id);
           // 删除文件
-          deleteFile({ id: item._id });
+          await deleteFile({ id: item._id });
         }}
       >
         <FileIcon
@@ -140,7 +140,7 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
         <ChevronRightIcon
           className={cn(
             "size-4 shrink-0 text-muted-foreground",
-            isOpen && "rotate-90"
+            isOpen && "rotate-90",
           )}
         />
         <FolderIcon folderName={folderName} className="size-4" />
@@ -216,8 +216,9 @@ export const Tree: FC<TreeProps> = ({ projectId, level, item }) => {
           setIsOpen(prev => !prev);
         }}
         onRename={() => setIsRenaming(true)}
-        onDelete={() => {
-          deleteFile({ id: item._id });
+        onDelete={async () => {
+          // 删除文件夹下的所有文件
+          await deleteFile({ id: item._id });
         }}
         onCreateFile={() => startCreating("file")}
         onCreateFolder={() => startCreating("folder")}
