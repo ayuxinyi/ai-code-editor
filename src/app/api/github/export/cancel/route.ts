@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { userId } = await fetchAuthQuery(api.auth.getCurrentUser);
+    const { _id: userId } = await fetchAuthQuery(api.auth.getCurrentUser);
     if (!userId) {
       return NextResponse.json(
         { error: "很抱歉，您的用户信息不存在，请联系管理员" },

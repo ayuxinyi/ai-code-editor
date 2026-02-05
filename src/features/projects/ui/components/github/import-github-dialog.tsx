@@ -56,7 +56,7 @@ export const ImportGithubDialog: FC<ImportGithubDialogProps> = ({
             projectId: Id<"projects">;
             eventId: string;
           }>();
-        toast.success("项目导入成功");
+        toast.success("项目已开始导入，这可能会花费一些时间，请耐心等待");
         onOpenChange(false);
         form.reset();
         router.push(`/projects/${projectId}`);
@@ -71,9 +71,16 @@ export const ImportGithubDialog: FC<ImportGithubDialogProps> = ({
               action: {
                 label: "连接 Github 账号",
                 onClick: async () => {
-                  await authClient.linkSocial({
-                    provider: "github",
-                  });
+                  try {
+                    await authClient.linkSocial({
+                      provider: "github",
+                      callbackURL: "/dashboard",
+                      errorCallbackURL: "/error",
+                      scopes: ["repo", "read:user", "user:email"],
+                    });
+                  } catch (error) {
+                    console.error("连接 Github 账号失败", error);
+                  }
                 },
               },
             });

@@ -1,6 +1,5 @@
 "use client";
 
-import { GitHubIcon } from "@daveyplate/better-auth-ui";
 import { Allotment } from "allotment";
 import { type FC, useState } from "react";
 
@@ -17,6 +16,7 @@ import { cn } from "@/lib/utils";
 
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { FileExplorer } from "../components/file-explorer";
+import { ExportToGithubPopover } from "../components/github/export-to-github-popover";
 import { ProjectTab } from "../components/project-tab";
 
 interface Props {
@@ -45,11 +45,9 @@ export const ProjectIdSection: FC<Props> = ({ projectId }) => {
             setActiveTab("preview");
           }}
         />
+        {/* 导出到 GitHub 按钮 */}
         <div className="flex-1 flex justify-end h-full">
-          <div className="flex items-center gap-1.5 h-full px-3 cursor-pointer text-muted-foreground border-l hover:bg-accent/30">
-            <GitHubIcon className="size-3.5" />
-            <span className="text-sm">导出</span>
-          </div>
+          <ExportToGithubPopover projectId={projectId} />
         </div>
       </nav>
       {/* 代码编辑区 */}

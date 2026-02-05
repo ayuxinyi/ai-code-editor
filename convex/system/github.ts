@@ -250,23 +250,31 @@ export const createGithubProject = mutation({
 export const getGithubAccessToken = query({
   args: {},
   handler: async ctx => {
-    // 从组件拿到 Better Auth 的实例和带 session cookie 的 headers
-    const { auth, headers } = await authComponent.getAuth(createAuth, ctx);
+    try {
+      // 从组件拿到 Better Auth 的实例和带 session cookie 的 headers
+      const { auth, headers } = await authComponent.getAuth(createAuth, ctx);
 
-    // providerId 要和你 Better Auth 配置里的 provider key 对上，一般是 "github"
-    const token = await auth.api.getAccessToken({
-      body: {
-        providerId: "github",
-      },
-      headers,
-    });
+      // providerId 要和你 Better Auth 配置里的 provider key 对上，一般是 "github"
+      const token = await auth.api.getAccessToken({
+        body: {
+          providerId: "github",
+        },
+        headers,
+      });
 
-    // Better Auth 通常会返回 { accessToken, refreshToken, expiresAt, scopes, ... }
-    return {
-      // github 访问令牌
-      accessToken: token.accessToken,
-      scopes: token.scopes,
-      expiresAt: token.accessTokenExpiresAt,
-    };
+      // Better Auth 通常会返回 { accessToken, refreshToken, expiresAt, scopes, ... }
+      return {
+        // github 访问令牌
+        accessToken: token.accessToken,
+        scopes: token.scopes,
+        expiresAt: token.accessTokenExpiresAt,
+      };
+    } catch {
+      return {
+        accessToken: null,
+        scopes: null,
+        expiresAt: null,
+      };
+    }
   },
 });

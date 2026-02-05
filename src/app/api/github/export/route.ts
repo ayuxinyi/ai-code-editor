@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { userId } = await fetchAuthQuery(api.auth.getCurrentUser);
+    const { _id: userId } = await fetchAuthQuery(api.auth.getCurrentUser);
     if (!userId) {
       return NextResponse.json(
         { error: "很抱歉，您的用户信息不存在，请联系管理员" },
@@ -49,10 +49,10 @@ export async function POST(req: NextRequest) {
     const { projectId, repoName, visibility, description } =
       requestSchema.parse(body);
 
-    const { accessToken, expiresAt } = await fetchAuthQuery(
+    const { accessToken } = await fetchAuthQuery(
       api.system.github.getGithubAccessToken,
     );
-    if (!accessToken || !expiresAt || expiresAt.getTime() < Date.now()) {
+    if (!accessToken) {
       return NextResponse.json(
         {
           error: "很抱歉，您的github授权已过期或无效，请重新登录",
