@@ -2,46 +2,26 @@
 import { GitHubIcon } from "@daveyplate/better-auth-ui";
 import { SparklesIcon } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
-import {
-  adjectives,
-  animals,
-  colors,
-  uniqueNamesGenerator,
-} from "unique-names-generator";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { FONT } from "@/constants";
 import { cn } from "@/lib/utils";
 
-import { useCreateProject } from "../../hooks/use-projects";
 import { ImportGithubDialog } from "./github/import-github-dialog";
 import { ProjectCommandDialog } from "./project-command-dialog";
+import { ProjectWithPrompt } from "./project-with-prompt";
 import { ProjectsList } from "./projects-list";
 
 export const ProjectsView = () => {
-  const createProject = useCreateProject();
   const [commandDialogOpen, setCommandDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [promptDialogOpen, setPromptDialogOpen] = useState(false);
 
-  const handleCreateProject = useCallback(() => {
-    try {
-      const projectName = uniqueNamesGenerator({
-        dictionaries: [adjectives, animals, colors],
-        separator: "-",
-        length: 3,
-      });
-      createProject({
-        name: projectName,
-      });
-      toast.success(`项目 ${projectName} 创建成功`);
-    } catch (error) {
-      console.error("项目创建失败", error);
-      toast.error("项目创建失败");
-    }
-  }, [createProject]);
+  const handleNewProjectWithPrompt = (open: boolean) => {
+    setPromptDialogOpen(open);
+  };
 
   useEffect(() => {
     const handleKeyDown = (ev: KeyboardEvent) => {
@@ -52,7 +32,7 @@ export const ProjectsView = () => {
         }
         if (ev.key.toLowerCase() === "j") {
           ev.preventDefault();
-          handleCreateProject();
+          handleNewProjectWithPrompt(true);
         }
         if (ev.key.toLowerCase() === "i") {
           ev.preventDefault();
@@ -64,7 +44,7 @@ export const ProjectsView = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleCreateProject]);
+  }, []);
 
   return (
     <>
@@ -75,6 +55,10 @@ export const ProjectsView = () => {
       <ProjectCommandDialog
         open={commandDialogOpen}
         onOpenChange={setCommandDialogOpen}
+      />
+      <ProjectWithPrompt
+        open={promptDialogOpen}
+        onOpenChange={setPromptDialogOpen}
       />
       <div className="min-h-screen bg-sidebar flex flex-col items-center justify-center p-6 md:p-16">
         <div className="w-full max-w-sm mx-auto flex flex-col gap-4 items-center">
@@ -103,7 +87,7 @@ export const ProjectsView = () => {
             <div className="grid grid-cols-2 gap-2">
               <Button
                 variant="outline"
-                onClick={handleCreateProject}
+                onClick={() => handleNewProjectWithPrompt(true)}
                 className="h-full items-start justify-start p-4 bg-background border flex flex-col gap-6 rounded-none"
               >
                 <div className="flex items-center justify-between w-full">
